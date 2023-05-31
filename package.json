@@ -14,7 +14,7 @@
     "lint:ts": "eslint --ext \".js,.ts,tsx\" --ignore-path .gitignore .",
     "lint:prettier": "prettier --check .",
     "lint": "yarn lint:ts && yarn lint:prettier",
-    "lintfix": "prettier --write --list-different . && yarn lint:ts --fix",
+    "lintfix": "prettier --write --list-different . && yarn lint --fix",
     "format": "prettier --write src/",
     "prepare": "husky install",
     "preview": "vite preview",
