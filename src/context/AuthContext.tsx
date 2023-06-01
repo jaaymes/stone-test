@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 import api from '@/services/api'
 
@@ -35,7 +36,7 @@ export const AuthProvider: React.FC<IContextProvider> = ({ children }) => {
       )
       if (!user) {
         setAuth(false)
-        alert('Usuário ou senha inválidos')
+        toast.error('Usuário ou senha inválidos')
         return
       }
       setAuth(true)

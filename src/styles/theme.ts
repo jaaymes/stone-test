@@ -1,4 +1,4 @@
-import { grey, red } from '@mui/material/colors'
+import { red } from '@mui/material/colors'
 import { createTheme } from '@mui/material/styles'
 
 const theme = createTheme({
@@ -13,7 +13,7 @@ const theme = createTheme({
       main: red.A400,
     },
     background: {
-      default: grey[500],
+      default: '#f5f5f5',
     },
   },
 })
