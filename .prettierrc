@@ -2,8 +2,8 @@
   "semi": false,
   "singleQuote": true,
   "tabWidth": 2,
+  "useTabs": false,
   "trailingComma": "es5",
   "proseWrap": "always",
-  "noExtraSpacing": true,
-  "plugins": ["prettier-plugin-tailwindcss"]
+  "noExtraSpacing": true
 }

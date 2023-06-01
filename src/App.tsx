@@ -1,9 +1,7 @@
+import RenderRouter from './routes'
+
 function App() {
-  return (
-    <>
-      <h1>Hello World</h1>
-    </>
-  )
+  return <RenderRouter />
 }
 
 export default App
