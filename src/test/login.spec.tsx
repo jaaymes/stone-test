@@ -11,7 +11,7 @@ const mockAuth: AuthContextData = {
 }
 
 describe('Login Page', () => {
-  it('should call the signIn function with correct input values', async () => {
+  it('deve chamar a função signIn com os valores de entrada corretos', async () => {
     const { getByLabelText, getByRole } = render(
       <AuthContext.Provider value={mockAuth}>
         <Login />
@@ -31,7 +31,7 @@ describe('Login Page', () => {
     })
   })
 
-  it('renders correctly', () => {
+  it('renderiza corretamente', () => {
     const { getByText } = render(
       <AuthContext.Provider value={mockAuth}>
         <Login />
@@ -41,7 +41,7 @@ describe('Login Page', () => {
     expect(getByText('Gestor Administrativo')).toBeInTheDocument()
   })
 
-  it('should call the signIn function with incorrect input values', async () => {
+  it('deve chamar a função signIn com valores de entrada incorretos', async () => {
     const { getByLabelText, getByRole } = render(
       <AuthContext.Provider value={mockAuth}>
         <Login />
