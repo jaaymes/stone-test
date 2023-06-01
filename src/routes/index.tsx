@@ -1,6 +1,8 @@
 import { FC, lazy } from 'react'
 import { RouteObject, useRoutes } from 'react-router-dom'
 
+import Audits from '@/pages/audits'
+import Cards from '@/pages/cards'
 import Dashboard from '@/pages/dashboard'
 import Layout from '@/pages/layout'
 import Login from '@/pages/login'
@@ -26,6 +28,26 @@ const routeList: RouteObject[] = [
       <PrivateRoute>
         <Layout>
           <Users />
+        </Layout>
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: '/cards',
+    element: (
+      <PrivateRoute>
+        <Layout>
+          <Cards />
+        </Layout>
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: '/audits',
+    element: (
+      <PrivateRoute>
+        <Layout>
+          <Audits />
         </Layout>
       </PrivateRoute>
     ),

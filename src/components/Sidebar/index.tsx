@@ -1,8 +1,8 @@
+import { useNavigate } from 'react-router'
+
 import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 import {
-  Badge,
   Box,
-  Chip,
   Drawer,
   IconButton,
   List,
@@ -10,6 +10,7 @@ import {
   ListItemIcon,
   ListItemText,
   Tooltip,
+  colors,
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
@@ -28,6 +29,7 @@ interface SideNavbarProps {
 
 const SideNavbar: React.FC<SideNavbarProps> = ({ isOpen }) => {
   const theme = useTheme()
+  const navigation = useNavigate()
 
   const drawerContent = (
     <>
@@ -68,8 +70,12 @@ const SideNavbar: React.FC<SideNavbarProps> = ({ isOpen }) => {
       </Box>
 
       <List dense={true}>
-        {navbarList.map((key) => (
+        {navbarList.map((key, index) => (
           <Tooltip
+            key={index}
+            onClick={() => {
+              navigation(key.path)
+            }}
             title={isOpen ? key.desc : ''}
             placement={'right'}
             componentsProps={{
@@ -89,14 +95,12 @@ const SideNavbar: React.FC<SideNavbarProps> = ({ isOpen }) => {
                 padding: '10px',
                 borderRadius: '8px',
                 '&:hover': {
-                  backgroundColor: '#26284687',
+                  backgroundColor: colors.grey[200],
                 },
               }}
             >
               <ListItemIcon sx={{ minWidth: '46px' }}>
-                <Badge badgeContent={key.badge} color="secondary" variant="dot">
-                  <key.icon sx={{ fontSize: '20px', color: 'gray.900' }} />
-                </Badge>
+                <key.icon sx={{ fontSize: '20px', color: 'gray.900' }} />
               </ListItemIcon>
 
               <ListItemText
@@ -113,16 +117,6 @@ const SideNavbar: React.FC<SideNavbarProps> = ({ isOpen }) => {
                   minWidth: '126px',
                 }}
               />
-              {key.badge !== 0 ? (
-                <Chip
-                  label={key.badge}
-                  color={'secondary'}
-                  size="small"
-                  sx={{ height: 'auto' }}
-                />
-              ) : (
-                <></>
-              )}
             </ListItemButton>
           </Tooltip>
         ))}
