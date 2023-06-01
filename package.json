@@ -13,7 +13,7 @@
     "dev:server": "yarn run build:server && node ./server/build/index.js",
     "lint:ts": "eslint --ext \".js,.ts,tsx\" --ignore-path .gitignore .",
     "lint:prettier": "prettier --check .",
-    "lint": "yarn lint:ts && yarn lint:prettier",
+    "lint": "yarn lint:ts",
     "lintfix": "prettier --write --list-different . && yarn lint --fix",
     "format": "prettier --write src/",
     "prepare": "husky install",

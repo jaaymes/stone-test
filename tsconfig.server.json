@@ -8,7 +8,5 @@
     "skipLibCheck": true,
     "moduleResolution": "Node"
   },
-  "include": [
-    "./server/src"
-  ]
+  "include": ["./server/src"]
 }
