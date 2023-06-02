@@ -1,2 +1,6 @@
 node_modules/
 server/
+build/
+.github/
+.husky/
+vite.config.js
