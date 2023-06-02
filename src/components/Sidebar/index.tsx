@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router'
 
+import { useAuth } from '@/hooks/useAuth'
+
 import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 import {
   Box,
@@ -30,6 +32,7 @@ interface SideNavbarProps {
 const SideNavbar: React.FC<SideNavbarProps> = ({ isOpen }) => {
   const theme = useTheme()
   const navigation = useNavigate()
+  const { signOut } = useAuth()
 
   const drawerContent = (
     <>
@@ -140,7 +143,7 @@ const SideNavbar: React.FC<SideNavbarProps> = ({ isOpen }) => {
             borderTop: '1px solid lightgray',
           }}
         >
-          <IconButton sx={{ color: 'lightGray' }}>
+          <IconButton sx={{ color: 'lightGray' }} onClick={signOut}>
             <ExitToAppIcon />
           </IconButton>
         </Box>

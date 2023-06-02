@@ -4,10 +4,10 @@ import Sidebar from '@/components/Sidebar'
 
 import MenuIcon from '@mui/icons-material/Menu'
 import { Box, Button, colors } from '@mui/material'
+
 interface LayoutProps {
   children: React.ReactNode
 }
-// #008E5A
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [open, setOpen] = useState(false)
@@ -53,7 +53,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           component="main"
           sx={{
             height: '100vh',
-            backgroundColor: colors.blue[300],
             width: '100%',
             padding: '8px',
             // margin: '6px 14px',

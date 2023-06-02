@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
@@ -27,51 +27,51 @@ export const AuthProvider: React.FC<IContextProvider> = ({ children }) => {
   const [auth, setAuth] = useState<boolean>(false)
   const [user, setUser] = useState<UserProps | null>(null)
 
-  const signIn = async (email: string, password: string) => {
-    api.get('/analysts').then((response) => {
-      const users = response.data
-      console.log('🚀 ~ file: AuthContext.tsx:31 ~ api.get ~ users:', users)
-      const user = users.find(
-        (user: any) => user.email === email && user.password === password
-      )
-      if (!user) {
-        setAuth(false)
-        toast.error('Usuário ou senha inválidos')
-        return
-      }
-      setAuth(true)
-      setUser(user)
-      navigate('/dashboard')
-    })
-    setAuth(true)
-    localStorage.setItem('email', email)
-    localStorage.setItem('password', password) // nao é seguro, é apenas um exemplo
-  }
+  const signIn = useCallback(async (email: string, password: string) => {
+    api
+      .get('/analysts')
+      .then((response) => {
+        const users = response.data
+        const user = users.find(
+          (user: any) => user.email === email && user.password === password
+        )
+        console.log('🚀 ~ file: AuthContext.tsx:39 ~ .then ~ user:', user)
+        if (!user) {
+          setAuth(false)
+          toast.error('Usuário ou senha inválidos')
+          return
+        }
+        setAuth(true)
+        localStorage.setItem('auth', 'true')
+        setUser(user)
+      })
+      .catch(() => {
+        toast.error('Erro ao tentar fazer login')
+      })
+  }, [])
 
-  const signOut = () => {
+  const signOut = useCallback(() => {
+    localStorage.removeItem('auth') // nao é seguro, é apenas um exemplo
     setAuth(false)
     setUser(null)
     navigate('/')
-  }
+  }, [navigate])
 
   useEffect(() => {
-    const email = localStorage.getItem('email')
-    const password = localStorage.getItem('password') // nao é seguro, é apenas um exemplo
-    if (email && password) {
-      signIn(email, password)
+    const auth = localStorage.getItem('auth') // nao é seguro, é apenas um exemplo
+    if (auth) {
+      setAuth(true)
     }
   }, [])
 
-  return (
-    <AuthContext.Provider
-      value={{
-        auth,
-        signIn,
-        signOut,
-        user,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  )
+  const context = useMemo(() => {
+    return {
+      auth,
+      signIn,
+      signOut,
+      user,
+    }
+  }, [auth, signIn, signOut, user])
+
+  return <AuthContext.Provider value={context}>{children}</AuthContext.Provider>
 }

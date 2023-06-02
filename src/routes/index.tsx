@@ -1,4 +1,4 @@
-import { FC, lazy } from 'react'
+import { FC } from 'react'
 import { RouteObject, useRoutes } from 'react-router-dom'
 
 import Audits from '@/pages/audits'
@@ -9,7 +9,7 @@ import Login from '@/pages/login'
 import Users from '@/pages/users'
 
 import PrivateRoute from './privateRoute'
-const NotFound = lazy(() => import('@/pages/404'))
+// const NotFound = lazy(() => import('@/pages/404'))
 
 const routeList: RouteObject[] = [
   {

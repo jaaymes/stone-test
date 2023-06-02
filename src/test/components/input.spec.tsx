@@ -5,13 +5,15 @@ import Input from '@/components/Input'
 import { fireEvent, render, screen } from '@testing-library/react'
 
 describe('Componente Input', () => {
+  // O componente de entrada é um componente controlado que usa o hook useForm
+  // para gerenciar seu estado e fornecer a validação.
   const Wrapper = ({ children }: { children: React.ReactNode }) => {
     const methods = useForm()
 
     return <FormProvider {...methods}>{children}</FormProvider>
   }
 
-  it('deve renderizar corretamente', () => {
+  it('should render correctly', () => {
     render(
       <Wrapper>
         <Input name="test" label="Test Label" />
@@ -20,7 +22,7 @@ describe('Componente Input', () => {
     expect(screen.getByLabelText('Test Label')).toBeInTheDocument()
   })
 
-  it('deve atualizar o valor na mudança de entrada', async () => {
+  it('should update value on input change', async () => {
     render(
       <Wrapper>
         <Input name="test" label="Test Label" />

@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router'
 
 import { useAuth } from '@/hooks/useAuth'
 
@@ -7,7 +9,9 @@ import Input from '@/components/Input'
 import { Box, Button, Container, Typography, colors } from '@mui/material'
 
 const Login: React.FC = () => {
-  const { signIn } = useAuth()
+  const navigate = useNavigate()
+
+  const { signIn, auth } = useAuth()
 
   const methods = useForm()
 
@@ -17,6 +21,12 @@ const Login: React.FC = () => {
     console.log(data)
     signIn(data.email, data.password)
   }
+
+  useEffect(() => {
+    if (auth) {
+      navigate('/dashboard')
+    }
+  }, [auth, navigate])
 
   return (
     <Container

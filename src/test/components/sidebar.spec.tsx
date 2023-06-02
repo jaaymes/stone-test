@@ -5,11 +5,15 @@ import navbarList from '@/components/Sidebar/navlist'
 
 import { Matcher, render, screen } from '@testing-library/react'
 
-// Criamos um mock do hook 'useNavigate'
+// Criar um mock do hook 'useNavigate'
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: jest.fn(),
 }))
+
+// This code renders the SideNavbar component with the browser router
+// then checks if each item in the navbar list is rendered
+// also checks if the logo is rendered
 
 describe('SideNavbar', () => {
   let navigate: jest.Mock<any, any, any>
