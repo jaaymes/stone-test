@@ -31,6 +31,7 @@ var dotenv_1 = __importDefault(require("dotenv"));
 var express_1 = __importDefault(require("express"));
 var jsonServer = __importStar(require("json-server"));
 var path = __importStar(require("path"));
+
 var generator_1 = require("./generator");
 /**
  * Local, on development environment

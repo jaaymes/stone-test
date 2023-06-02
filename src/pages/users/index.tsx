@@ -69,11 +69,13 @@ const Users = () => {
 
   return (
     <div>
-      <Table
-        headers={headers}
-        data={users}
-        traitResponse={handleTraitResponse}
-      />
+      {!isLoading && (
+        <Table
+          headers={headers}
+          data={users}
+          traitResponse={handleTraitResponse}
+        />
+      )}
     </div>
   )
 }
