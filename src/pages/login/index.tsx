@@ -18,7 +18,6 @@ const Login: React.FC = () => {
   const { handleSubmit } = methods
 
   const handleOnSubmit = async (data: any) => {
-    console.log(data)
     signIn(data.email, data.password)
   }
 

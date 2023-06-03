@@ -35,7 +35,6 @@ export const AuthProvider: React.FC<IContextProvider> = ({ children }) => {
         const user = users.find(
           (user: any) => user.email === email && user.password === password
         )
-        console.log('🚀 ~ file: AuthContext.tsx:39 ~ .then ~ user:', user)
         if (!user) {
           setAuth(false)
           toast.error('Usuário ou senha inválidos')

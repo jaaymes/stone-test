@@ -190,7 +190,6 @@ const Table = ({ headers, data, traitResponse, title }: TableProps) => {
 
   const handleRestructure = useCallback(async () => {
     if (traitResponse) {
-      console.log('traitResponse', traitResponse(data))
       setRows(await traitResponse(data))
       return
     }
@@ -208,10 +207,6 @@ const Table = ({ headers, data, traitResponse, title }: TableProps) => {
       ),
     [rows, order, orderBy, page, rowsPerPage]
   )
-
-  useEffect(() => {
-    console.log('row', rows)
-  }, [rows])
 
   useEffect(() => {
     handleRestructure()
