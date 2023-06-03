@@ -1,5 +1,5 @@
 export interface UserPros {
-  name: string
+  name: string | null
   email: string
   BirthDate: Date | string
   createdAt: Date | string

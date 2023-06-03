@@ -1,9 +1,9 @@
 import axios from 'axios'
 
-const port = process.env.VITE_API_PORT || 3000
+const isDev = process.env.NODE_ENV !== 'production'
 
 const api = axios.create({
-  baseURL: `http://localhost:${port}/api`,
+  baseURL: `http://localhost:${isDev ? 3001 : 3000}/api`,
 })
 
 export default api

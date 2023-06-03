@@ -10,6 +10,7 @@ module.exports = {
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
   plugins: ['react-refresh', 'prettier', 'eslint-plugin-import-helpers'],
   rules: {
+    semi: ['error', 'never'],
     'react-refresh/only-export-components': 'warn',
     'no-undef': 'off',
     'prettier/prettier': 'error',

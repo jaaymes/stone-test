@@ -11,6 +11,7 @@ import CssBaseline from '@mui/material/CssBaseline'
 
 import App from './App'
 import { AuthProvider } from './context/AuthContext'
+import { UtilsProvider } from './context/UtilsContext'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
@@ -29,7 +30,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
           theme="colored"
         />
         <AuthProvider>
-          <App />
+          <UtilsProvider>
+            <App />
+          </UtilsProvider>
         </AuthProvider>
       </BrowserRouter>
     </ThemeProvider>

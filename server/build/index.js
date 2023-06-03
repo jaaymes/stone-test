@@ -42,7 +42,7 @@ var generator_1 = require("./generator");
  * React App: http://localhost:3000 | https://dashboard.heroku.com/apps/nome-do-meu-app
  */
 dotenv_1.default.config({ path: path.resolve(__dirname, '../../.env') });
-var port = process.env.PORT;
+var port = process.env.PORT || '3000';
 var server = (0, express_1.default)();
 var isDev = process.env.NODE_ENV !== 'production';
 if (isDev) {

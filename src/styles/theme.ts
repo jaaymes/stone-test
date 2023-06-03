@@ -1,6 +1,19 @@
 import { red } from '@mui/material/colors'
 import { createTheme } from '@mui/material/styles'
 
+declare module '@mui/material/styles/createPalette' {
+  interface Palette {
+    custom: {
+      stone: string
+    }
+  }
+  interface PaletteOptions {
+    custom?: {
+      stone?: string
+    }
+  }
+}
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -14,6 +27,9 @@ const theme = createTheme({
     },
     background: {
       default: '#f5f5f5',
+    },
+    custom: {
+      stone: '#00a868',
     },
   },
 })

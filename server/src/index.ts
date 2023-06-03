@@ -18,7 +18,7 @@ import { db } from './generator'
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') })
 
-let port = process.env.VITE_API_PORT
+let port = process.env.PORT || '3000'
 const server = express()
 const isDev = process.env.NODE_ENV !== 'production'
 

@@ -1,13 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
-import { GrValidate } from 'react-icons/gr'
+import { AiFillCheckCircle, AiOutlineCloseSquare } from 'react-icons/ai'
+import { IoMdCloseCircle } from 'react-icons/io'
+import { MdVerified } from 'react-icons/md'
 import { toast } from 'react-toastify'
+
+import { useUtils } from '@/hooks/useUtils'
 
 import Table from '@/components/Table'
 
 import api from '@/services/api'
 
 import { UserPros } from '@/interfaces/users'
-import { colors } from '@mui/material'
+import { IconButton, Tooltip, colors } from '@mui/material'
 
 const headers = [
   {
@@ -20,25 +24,27 @@ const headers = [
     id: 'email',
     label: 'E-mail',
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
   },
   {
     id: 'validDocument',
     label: 'Documento válido',
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
   },
   {
     id: 'verified',
     label: 'Verificado',
     numeric: false,
-    disablePadding: false,
+    disablePadding: true,
   },
 ]
 
 const Users = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [users, setUsers] = useState<UserPros[]>([])
+  const [usersFiltered, setUsersFiltered] = useState<UserPros[]>([])
+  const { search } = useUtils()
 
   const handleLoadUsers = useCallback(async () => {
     try {
@@ -56,23 +62,60 @@ const Users = () => {
     return data.map((d: any) => ({
       ...d,
       validDocument: d.metadatas.validDocument ? (
-        <GrValidate color={colors.green.A700} />
+        <Tooltip title="Validado" arrow placement="left">
+          <IconButton>
+            <AiFillCheckCircle color={colors.green[400]} size={25} />
+          </IconButton>
+        </Tooltip>
       ) : (
-        'Não'
+        <Tooltip title="Não validado" arrow placement="left">
+          <IconButton>
+            <AiOutlineCloseSquare color={colors.red[400]} size={25} />
+          </IconButton>
+        </Tooltip>
+      ),
+      verified: d.metadatas.verified ? (
+        <Tooltip title="Verificado" arrow placement="left">
+          <IconButton>
+            <MdVerified color={colors.green[400]} size={25} />
+          </IconButton>
+        </Tooltip>
+      ) : (
+        <Tooltip title="Não verificado" arrow placement="left">
+          <IconButton>
+            <IoMdCloseCircle color={colors.red[400]} size={25} />
+          </IconButton>
+        </Tooltip>
       ),
     }))
   }
+
+  const handleSearch = useCallback(
+    (search: string) => {
+      const filteredUsers = users.filter((user) => {
+        if (!user?.name) return false
+        return user?.name.toLowerCase().includes(search.toLowerCase())
+      })
+      setUsersFiltered(filteredUsers)
+    },
+    [users]
+  )
 
   useEffect(() => {
     handleLoadUsers()
   }, [handleLoadUsers])
 
+  useEffect(() => {
+    if (search) handleSearch(search)
+  }, [handleSearch, search])
+
   return (
     <div>
       {!isLoading && (
         <Table
+          title="Usuários"
           headers={headers}
-          data={users}
+          data={search.length > 0 ? usersFiltered : users}
           traitResponse={handleTraitResponse}
         />
       )}

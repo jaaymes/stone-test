@@ -2,8 +2,10 @@ import { useState } from 'react'
 
 import Sidebar from '@/components/Sidebar'
 
+import theme from '@/styles/theme'
+
 import MenuIcon from '@mui/icons-material/Menu'
-import { Box, Button, colors } from '@mui/material'
+import { Box, Button } from '@mui/material'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -23,7 +25,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <Box
           component="main"
           sx={{
-            backgroundColor: colors.green.A700,
+            backgroundColor: theme.palette.custom.stone,
             width: '100%',
             padding: '8px',
           }}
@@ -55,7 +57,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             height: '100vh',
             width: '100%',
             padding: '8px',
-            // margin: '6px 14px',
           }}
         >
           {children}

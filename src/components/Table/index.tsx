@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
+import { useUtils } from '@/hooks/useUtils'
+
 import {
   Box,
   FormControlLabel,
@@ -13,6 +15,9 @@ import {
   TablePagination,
   TableRow,
   TableSortLabel,
+  TextField,
+  Toolbar,
+  Typography,
 } from '@mui/material'
 import { visuallyHidden } from '@mui/utils'
 
@@ -109,70 +114,49 @@ function EnhancedTableHead({
   )
 }
 
-// interface EnhancedTableToolbarProps {
-//   numSelected: number
-// }
+interface EnhancedTableToolbarProps {
+  title: string
+}
 
-// function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
-//   const { numSelected } = props
+function EnhancedTableToolbar({ title }: EnhancedTableToolbarProps) {
+  const { handleSearch } = useUtils()
+  return (
+    <Toolbar
+      sx={{
+        pl: { sm: 2 },
+        pr: { xs: 1, sm: 1 },
+      }}
+    >
+      <Typography
+        sx={{ flex: '1 1 100%' }}
+        variant="h6"
+        id="tableTitle"
+        component="div"
+      >
+        {title}
+      </Typography>
 
-//   return (
-//     <Toolbar
-//       sx={{
-//         pl: { sm: 2 },
-//         pr: { xs: 1, sm: 1 },
-//         ...(numSelected > 0 && {
-//           bgcolor: (theme) =>
-//             alpha(
-//               theme.palette.primary.main,
-//               theme.palette.action.activatedOpacity
-//             ),
-//         }),
-//       }}
-//     >
-//       {numSelected > 0 ? (
-//         <Typography
-//           sx={{ flex: '1 1 100%' }}
-//           color="inherit"
-//           variant="subtitle1"
-//           component="div"
-//         >
-//           {numSelected} selected
-//         </Typography>
-//       ) : (
-//         <Typography
-//           sx={{ flex: '1 1 100%' }}
-//           variant="h6"
-//           id="tableTitle"
-//           component="div"
-//         >
-//           Nutrition
-//         </Typography>
-//       )}
-//       {/* {numSelected > 0 ? (
-//         <Tooltip title="Delete">
-//           <IconButton>
-//             <DeleteIcon />
-//           </IconButton>
-//         </Tooltip>
-//       ) : (
-//         <Tooltip title="Filter list">
-//           <IconButton>
-//             <FilterListIcon />
-//           </IconButton>
-//         </Tooltip>
-//       )} */}
-//     </Toolbar>
-//   )
-// }
+      <TextField
+        id="outlined-search"
+        label="Pesquisar"
+        type="search"
+        variant="outlined"
+        onChange={handleSearch}
+        sx={{ width: '100%', maxWidth: '300px' }}
+        size="small"
+      />
+    </Toolbar>
+  )
+}
 
 interface TableProps {
   headers: HeadCell[]
   data: any[]
   traitResponse?: (data: any) => any
+  title: string
 }
 
-export default function Table({ headers, data, traitResponse }: TableProps) {
+const Table = ({ headers, data, traitResponse, title }: TableProps) => {
   const [order, setOrder] = useState<Order>('asc')
   const [orderBy, setOrderBy] = useState<string>(headers[0].id)
   const [page, setPage] = useState(0)
@@ -236,7 +220,7 @@ export default function Table({ headers, data, traitResponse }: TableProps) {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
+        <EnhancedTableToolbar title={title} />
         <TableContainer>
           <TableMui
             sx={{ minWidth: 750 }}
@@ -274,6 +258,10 @@ export default function Table({ headers, data, traitResponse }: TableProps) {
           </TableMui>
         </TableContainer>
         <TablePagination
+          labelRowsPerPage="Linhas por página"
+          labelDisplayedRows={({ from, to, count }) =>
+            `${from}-${to} de ${count}`
+          }
           rowsPerPageOptions={[5, 10, 25, 50]}
           component="div"
           count={rows.length}
@@ -285,8 +273,10 @@ export default function Table({ headers, data, traitResponse }: TableProps) {
       </Paper>
       <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
+        label="Espaçamento"
       />
     </Box>
   )
 }
+
+export default Table
