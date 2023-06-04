@@ -57,7 +57,7 @@ const headers = [
 ]
 
 const Cards = () => {
-  const { search } = useUtils()
+  const { search, features } = useUtils()
   const { user } = useAuth()
   const navigate = useNavigate()
 
@@ -67,10 +67,6 @@ const Cards = () => {
   const [open, setOpen] = useState(false)
   const [openCard, setOpenCard] = useState(false)
   const [selectedCard, setSelectedCard] = useState<CardProps>({} as CardProps)
-
-  useEffect(() => {
-    console.log('selectedCard', selectedCard)
-  }, [selectedCard])
 
   const handleOpen = useCallback(() => {
     setOpen(true)
@@ -105,7 +101,7 @@ const Cards = () => {
       ...d,
       name: d?.metadatas?.name,
       digits: d?.metadatas?.digits,
-      limit: normalizeCurrency(d?.metadatas?.limit || 0),
+      limit: user?.roles.includes('n2') ? normalizeCurrency(d?.metadatas?.limit || 0) : 'R$ ****',
       statusLabel:
         (d?.status === 'requested' && (
           <Label color="primary" variant="filled">
@@ -283,16 +279,13 @@ const Cards = () => {
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell>
-                    <Typography color="text.secondary" gutterBottom>
-                      Limite: <strong>{normalizeCurrency(selectedCard?.metadatas?.limit)}</strong>
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography color="text.secondary" gutterBottom>
-                      Digito: <strong>{selectedCard?.metadatas?.digits}</strong>
-                    </Typography>
-                  </TableCell>
+                  {user?.roles.includes('n2') && (
+                    <TableCell>
+                      <Typography color="text.secondary" gutterBottom>
+                        Limite: <strong>{normalizeCurrency(selectedCard?.metadatas?.limit)}</strong>
+                      </Typography>
+                    </TableCell>
+                  )}
                   {selectedCard?.updatedAt && (
                     <TableCell>
                       <Typography color="text.secondary" gutterBottom>
@@ -317,7 +310,7 @@ const Cards = () => {
         }
       />
       <Table
-        add={'/cards/create'}
+        add={features.includes('card') ? '/cards/create' : undefined}
         isLoading={isLoading}
         title="Cartões"
         headers={headers}

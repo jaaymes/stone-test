@@ -23,6 +23,7 @@ const navbarList = [
     icon: VerifiedUserIcon,
     desc: 'Auditoria',
     path: '/audits',
+    permission: 'n2',
   },
 ]
 

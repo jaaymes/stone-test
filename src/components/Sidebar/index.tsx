@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
 import { useAuth } from '@/hooks/useAuth'
@@ -28,11 +29,32 @@ interface SideNavbarProps {
   isOpen: boolean
 }
 
+interface INavbarProps {
+  icon: React.ElementType
+  desc: string
+  path: string
+}
+
 const SideNavbar: React.FC<SideNavbarProps> = ({ isOpen }) => {
   const theme = useTheme()
   const navigation = useNavigate()
-  const { signOut } = useAuth()
+  const { signOut, user } = useAuth()
   const location = useLocation()
+  const [routesAllowed, setRoutesAllowed] = useState<INavbarProps[]>([])
+
+  const handleRestructureRoutes = useCallback(() => {
+    const routes = navbarList.filter((route) => {
+      if (route.permission) {
+        return user?.roles.includes(route.permission)
+      }
+      return true
+    })
+    setRoutesAllowed(routes)
+  }, [user])
+
+  useEffect(() => {
+    handleRestructureRoutes()
+  }, [handleRestructureRoutes, location.pathname])
 
   const drawerContent = (
     <>
@@ -68,7 +90,7 @@ const SideNavbar: React.FC<SideNavbarProps> = ({ isOpen }) => {
       </Box>
 
       <List dense={true}>
-        {navbarList.map((key, index) => (
+        {routesAllowed.map((key, index) => (
           <Tooltip
             key={index}
             onClick={() => {

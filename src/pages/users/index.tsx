@@ -6,6 +6,7 @@ import { MdVerified } from 'react-icons/md'
 import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 
+import { useAuth } from '@/hooks/useAuth'
 import { useUtils } from '@/hooks/useUtils'
 
 import Button from '@/components/Button'
@@ -63,6 +64,7 @@ const headers = [
 const Users = () => {
   const { search } = useUtils()
   const navigate = useNavigate()
+  const { user } = useAuth()
 
   const [isLoading, setIsLoading] = useState(false)
   const [users, setUsers] = useState<UserProps[]>([])
@@ -232,11 +234,13 @@ const Users = () => {
                 </TableRow>
 
                 <TableRow>
-                  <TableCell>
-                    <Typography color="text.secondary" gutterBottom>
-                      Salario: <strong>{normalizeCurrency(selectedUser?.salaryBase as number)}</strong>
-                    </Typography>
-                  </TableCell>
+                  {user?.roles.includes('n2') && (
+                    <TableCell>
+                      <Typography color="text.secondary" gutterBottom>
+                        Salario: <strong>{normalizeCurrency(selectedUser?.salaryBase as number)}</strong>
+                      </Typography>
+                    </TableCell>
+                  )}
                   <TableCell>
                     <Typography color="text.secondary" gutterBottom>
                       Criado: <strong>{new Date(selectedUser?.createdAt as Date).toLocaleDateString('pt-BR')}</strong>

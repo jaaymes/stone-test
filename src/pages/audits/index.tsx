@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { FaEye } from 'react-icons/fa'
+import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 
+import { useAuth } from '@/hooks/useAuth'
 import { useUtils } from '@/hooks/useUtils'
 
 import Button from '@/components/Button'
@@ -41,7 +43,9 @@ const headers = [
 ]
 
 const Audits = () => {
+  const { user, signOut } = useAuth()
   const { search } = useUtils()
+  const navigate = useNavigate()
 
   const [isLoading, setIsLoading] = useState(false)
   const [audits, setAudits] = useState<AuditProps[]>([])
@@ -141,6 +145,13 @@ const Audits = () => {
   useEffect(() => {
     console.log('selectedCard', selectedCard)
   }, [selectedCard])
+
+  useEffect(() => {
+    if (!user?.roles.includes('n2')) {
+      toast.error('Você não tem permissão para acessar essa página')
+      signOut()
+    }
+  }, [navigate, signOut, user?.roles])
 
   return (
     <>

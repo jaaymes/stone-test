@@ -4,19 +4,22 @@ import { toast } from 'react-toastify'
 
 import api from '@/services/api'
 
+import { UserProps } from '@/interfaces/users'
+
 export interface AuthContextData {
   auth: boolean
   signIn: (email: string, password: string) => void
   signOut: () => void
-  user: UserProps | null
+  user: UserPropsData | null
 }
 
-interface UserProps {
+interface UserPropsData {
   email: string
   id: number
   password: string
   roles: string[]
   user_id: number
+  user: UserProps | null
 }
 
 export const AuthContext = createContext<AuthContextData>({} as AuthContextData)
@@ -25,23 +28,30 @@ export const AuthProvider: React.FC<IContextProvider> = ({ children }) => {
   const navigate = useNavigate()
 
   const [auth, setAuth] = useState<boolean>(false)
-  const [user, setUser] = useState<UserProps | null>(null)
+  const [user, setUser] = useState<UserPropsData | null>(null)
 
   const signIn = useCallback(async (email: string, password: string) => {
     api
       .get('/analysts')
-      .then((response) => {
+      .then(async (response) => {
         const users = response.data
         const user = users.find((user: any) => user.email === email && user.password === password)
-        if (!user) {
-          setAuth(false)
-          toast.error('Usuário ou senha inválidos')
-          return
+        if (user) {
+          const { data: userData } = await api.get(`/users/${user.user_id}`)
+          const _user = {
+            ...user,
+            user: userData,
+          }
+          if (!_user) {
+            setAuth(false)
+            toast.error('Usuário ou senha inválidos')
+            return
+          }
+          setAuth(true)
+          localStorage.setItem('auth', 'true')
+          localStorage.setItem('user', JSON.stringify(_user))
+          setUser(_user)
         }
-        setAuth(true)
-        localStorage.setItem('auth', 'true')
-        localStorage.setItem('user', JSON.stringify(user))
-        setUser(user)
       })
       .catch(() => {
         toast.error('Erro ao tentar fazer login')
@@ -50,6 +60,7 @@ export const AuthProvider: React.FC<IContextProvider> = ({ children }) => {
 
   const signOut = useCallback(() => {
     localStorage.removeItem('auth') // nao é seguro, é apenas um exemplo
+    localStorage.removeItem('user')
     setAuth(false)
     setUser(null)
     navigate('/')

@@ -5,6 +5,8 @@ import { toast } from 'react-toastify'
 
 import * as yup from 'yup'
 
+import { useAuth } from '@/hooks/useAuth'
+
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import Button from '@/components/Button'
@@ -31,6 +33,7 @@ const CardSchema = yup
   .required()
 
 const CreateUser = () => {
+  const { user: userContext } = useAuth()
   const [features, setFeatures] = useState<{ label: string; value: string | number }[]>([])
   const [user, setUser] = useState<UserProps>({} as UserProps)
   const navigate = useNavigate()
@@ -139,7 +142,7 @@ const CreateUser = () => {
         toast.error(error.response.data.message || 'Erro ao salvar usuário')
       }
     },
-    [id, navigate]
+    [id, navigate, user]
   )
 
   useEffect(() => {
@@ -233,9 +236,11 @@ const CreateUser = () => {
               <Grid item xs={12} md={4}>
                 <Input name="email" label="E-mail" fullWidth />
               </Grid>
-              <Grid item xs={12} md={4}>
-                <Input normalize={normalizeCurrency} name="salaryBase" label="Salário Base" fullWidth />
-              </Grid>
+              {userContext?.roles.includes('n2') && (
+                <Grid item xs={12} md={4}>
+                  <Input normalize={normalizeCurrency} name="salaryBase" label="Salário Base" fullWidth />
+                </Grid>
+              )}
             </Grid>
             <Grid container spacing={2}>
               <Grid item xs={12} md={6} gap={1} display="flex">
@@ -276,9 +281,12 @@ const CreateUser = () => {
                 <Switch name="metadatas.verified" label="Verificar Usuário" />
               </Grid>
             </Grid>
-            <Box display="flex" justifyContent="flex-end">
-              <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-                Salvar
+            <Box display="flex" justifyContent="flex-end" gap={2}>
+              <Button type="button" onClick={() => navigate('/users')} variant="contained" color="error">
+                Voltar
+              </Button>
+              <Button type="submit" variant="contained">
+                <Typography>Salvar</Typography>
               </Button>
             </Box>
           </Box>
