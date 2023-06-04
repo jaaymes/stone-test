@@ -13,12 +13,24 @@ const Input: React.FC<InputProps> = ({ name, label, ...rest }) => {
     <Controller
       name={name}
       control={control}
-      render={({
-        field: { ref, ...field },
-        fieldState: { invalid, error },
-      }) => (
+      render={({ field: { ref, ...field }, fieldState: { invalid, error } }) => (
         <TextField
           {...field}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: (theme) => theme.palette.custom.stone, // Cor da borda no estado hover
+              },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: (theme) => theme.palette.custom.stone, // Cor da borda quando o campo está focado
+              },
+            },
+            '& .MuiFormLabel-root': {
+              '&.Mui-focused': {
+                color: (theme) => theme.palette.custom.stone, // Cor do label quando o campo está focado
+              },
+            },
+          }}
           value={field.value || ''}
           label={label}
           error={invalid}

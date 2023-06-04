@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { useNavigate } from 'react-router'
 
 import { useAuth } from '@/hooks/useAuth'
@@ -37,8 +38,13 @@ const Login: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         height: '100vh',
+        backgroundColor: (theme) => theme.palette.custom.stone,
       }}
     >
+      <Box>
+        <LazyLoadImage src="/logo_branca.png" alt="logo" effect="blur" height={150} />
+      </Box>
+
       <Box
         sx={{
           borderRadius: 4,
@@ -46,19 +52,13 @@ const Login: React.FC = () => {
           padding: { xs: 2, sm: 3, md: 4 },
           maxWidth: { sm: '600px' },
           width: '100%',
-          margin: 'auto',
           gap: '1rem',
           display: 'flex',
           flexDirection: 'column',
         }}
       >
-        <Typography
-          component="h1"
-          variant="h5"
-          textAlign="center"
-          fontWeight={700}
-        >
-          Gestor Administrativo
+        <Typography variant="h4" textAlign="center" fontWeight={700} color={'#22B24C'}>
+          Gestor de Cartões Stone
         </Typography>
         <FormProvider {...methods}>
           <Box
@@ -74,8 +74,15 @@ const Login: React.FC = () => {
               type="submit"
               fullWidth
               variant="contained"
-              color="primary"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{
+                mt: 3,
+                mb: 2,
+                bgcolor: (theme) => theme.palette.custom.stone,
+                '&:hover': {
+                  bgcolor: (theme) => theme.palette.custom.stone,
+                  opacity: 0.8,
+                },
+              }}
             >
               Entrar
             </Button>

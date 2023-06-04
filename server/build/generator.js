@@ -85,6 +85,11 @@ var generateRandomNumber = function (min, max) {
 var onlyUnique = function (value, index, self) {
     return self.indexOf(value) === index;
 };
+var randomStatusCard = function () {
+    var status = ['requested', 'approved', 'processed', 'canceled', 'rejected'];
+    var randomIndex = generateRandomNumber(0, status.length - 1);
+    return status[randomIndex];
+};
 var getUsers = function () {
     return references.users.map(function (value, index) { return ({
         name: value,
@@ -122,7 +127,7 @@ var getCards = function () {
         .map(function (value, index) { return ({
         createdAt: randomDate(new Date(2012, 0, 1), new Date()),
         updatedAt: null,
-        status: 'requested',
+        status: randomStatusCard(),
         id: index + 1000,
         user_id: index,
         metadatas: {

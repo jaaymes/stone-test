@@ -36,19 +36,13 @@ type Order = 'asc' | 'desc'
 function getComparator<Key extends keyof any>(
   order: Order,
   orderBy: Key
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string }
-) => number {
+): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy)
 }
 
-function stableSort<T>(
-  array: readonly T[],
-  comparator: (a: T, b: T) => number
-) {
+function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number])
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0])
@@ -74,16 +68,10 @@ interface EnhancedTableProps {
   headers: readonly HeadCell[]
 }
 
-function EnhancedTableHead({
-  order,
-  orderBy,
-  onRequestSort,
-  headers,
-}: EnhancedTableProps) {
-  const createSortHandler =
-    (property: string) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property)
-    }
+function EnhancedTableHead({ order, orderBy, onRequestSort, headers }: EnhancedTableProps) {
+  const createSortHandler = (property: string) => (event: React.MouseEvent<unknown>) => {
+    onRequestSort(event, property)
+  }
 
   return (
     <TableHead>
@@ -127,12 +115,7 @@ function EnhancedTableToolbar({ title }: EnhancedTableToolbarProps) {
         pr: { xs: 1, sm: 1 },
       }}
     >
-      <Typography
-        sx={{ flex: '1 1 100%' }}
-        variant="h6"
-        id="tableTitle"
-        component="div"
-      >
+      <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
         {title}
       </Typography>
 
@@ -164,10 +147,7 @@ const Table = ({ headers, data, traitResponse, title }: TableProps) => {
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [rows, setRows] = useState<any[]>([])
 
-  const handleRequestSort = (
-    _: React.MouseEvent<unknown>,
-    property: string
-  ) => {
+  const handleRequestSort = (_: React.MouseEvent<unknown>, property: string) => {
     const isAsc = orderBy === property && order === 'asc'
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
@@ -177,9 +157,7 @@ const Table = ({ headers, data, traitResponse, title }: TableProps) => {
     setPage(newPage)
   }
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
   }
@@ -196,15 +174,10 @@ const Table = ({ headers, data, traitResponse, title }: TableProps) => {
     setRows(data)
   }, [data, traitResponse])
 
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0
 
   const visibleRows = useMemo(
-    () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      ),
+    () => stableSort(rows, getComparator(order, orderBy)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
     [rows, order, orderBy, page, rowsPerPage]
   )
 
@@ -217,24 +190,17 @@ const Table = ({ headers, data, traitResponse, title }: TableProps) => {
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar title={title} />
         <TableContainer>
-          <TableMui
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
-          >
-            <EnhancedTableHead
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              headers={headers}
-            />
+          <TableMui sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'}>
+            <EnhancedTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} headers={headers} />
             <TableBody>
               {visibleRows.map((row, index) => {
                 return (
                   <TableRow key={index}>
                     {headers.map((header) => {
                       return (
-                        <TableCell key={header.id}>{row[header.id]}</TableCell>
+                        <TableCell align={header.numeric ? 'right' : 'left'} key={header.id}>
+                          {row[header.id]}
+                        </TableCell>
                       )
                     })}
                   </TableRow>
@@ -254,9 +220,7 @@ const Table = ({ headers, data, traitResponse, title }: TableProps) => {
         </TableContainer>
         <TablePagination
           labelRowsPerPage="Linhas por página"
-          labelDisplayedRows={({ from, to, count }) =>
-            `${from}-${to} de ${count}`
-          }
+          labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
           rowsPerPageOptions={[5, 10, 25, 50]}
           component="div"
           count={rows.length}
@@ -266,10 +230,7 @@ const Table = ({ headers, data, traitResponse, title }: TableProps) => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Espaçamento"
-      />
+      <FormControlLabel control={<Switch checked={dense} onChange={handleChangeDense} />} label="Espaçamento" />
     </Box>
   )
 }

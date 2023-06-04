@@ -111,14 +111,12 @@ const Users = () => {
 
   return (
     <div>
-      {!isLoading && (
-        <Table
-          title="Usuários"
-          headers={headers}
-          data={search.length > 0 ? usersFiltered : users}
-          traitResponse={handleTraitResponse}
-        />
-      )}
+      <Table
+        title="Usuários"
+        headers={headers}
+        data={search.length > 0 ? usersFiltered : users}
+        traitResponse={handleTraitResponse}
+      />
     </div>
   )
 }
