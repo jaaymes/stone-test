@@ -24,7 +24,7 @@ const headers = [
     disablePadding: false,
   },
   {
-    id: 'name',
+    id: 'requestedBy',
     label: 'Autorizado',
     numeric: false,
     disablePadding: false,
@@ -84,7 +84,6 @@ const Audits = () => {
   const handleTraitResponse = (data: AuditProps[]) => {
     return data.map((d) => ({
       ...d,
-      name: d.user?.email || d?.requestedBy,
       typeText: d?.type === 'card-status-change' && 'Troca de Status',
       type: d?.type === 'card-status-change' && (
         <Label color="primary" variant="filled">
@@ -166,7 +165,7 @@ const Audits = () => {
                       <br />
                     </Typography>
                     <Typography variant="body2">
-                      Data:{' '}
+                      Solicitado:{' '}
                       <strong>
                         {new Date(selectedCard?.before?.createdAt as Date).toLocaleDateString('pt-BR', {
                           day: '2-digit',
@@ -176,6 +175,7 @@ const Audits = () => {
                       </strong>
                       <br />
                     </Typography>
+                    <Typography variant="body2">&nbsp;</Typography>
                   </CardContent>
                 </React.Fragment>
               </Card>
@@ -228,9 +228,20 @@ const Audits = () => {
                       <br />
                     </Typography>
                     <Typography variant="body2">
-                      Data:{' '}
+                      Solicitado:{' '}
                       <strong>
                         {new Date(selectedCard?.before?.createdAt as Date).toLocaleDateString('pt-BR', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                        })}
+                      </strong>
+                      <br />
+                    </Typography>
+                    <Typography variant="body2">
+                      Aprovado em:{' '}
+                      <strong>
+                        {new Date(selectedCard?.after?.updatedAt as Date).toLocaleDateString('pt-BR', {
                           day: '2-digit',
                           month: '2-digit',
                           year: 'numeric',

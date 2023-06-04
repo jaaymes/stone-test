@@ -4,9 +4,10 @@ import { Button as ButtonMui, ButtonProps } from '@mui/material'
 
 interface IButtonProps extends ButtonProps {
   children: React.ReactNode
+  px?: number
 }
 
-const Button = forwardRef<HTMLButtonElement, IButtonProps>(({ children, ...props }, ref) => {
+const Button = forwardRef<HTMLButtonElement, IButtonProps>(({ children, px, ...props }, ref) => {
   return (
     <ButtonMui
       sx={{
@@ -17,6 +18,8 @@ const Button = forwardRef<HTMLButtonElement, IButtonProps>(({ children, ...props
             cursor: 'not-allowed',
           },
         },
+        textTransform: 'none',
+        px: px,
       }}
       {...props}
       ref={ref}

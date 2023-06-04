@@ -8,6 +8,7 @@ import Layout from '@/pages/layout'
 import Login from '@/pages/login'
 import Users from '@/pages/users'
 
+import CreateCards from './pages/cards/create'
 import PrivateRoute from './routes/privateRoute'
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/users" element={<Users />} />
                 <Route path="/cards" element={<Cards />} />
+                <Route path="/cards/create" element={<CreateCards />} />
                 <Route path="/audits" element={<Audits />} />
               </Routes>
             </Layout>

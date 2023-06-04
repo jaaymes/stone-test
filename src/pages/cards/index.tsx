@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { FaExchangeAlt } from 'react-icons/fa'
+import { FaExchangeAlt, FaEye } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 
 import { useAuth } from '@/hooks/useAuth'
@@ -10,10 +10,22 @@ import Label from '@/components/Label/Label'
 import Modal from '@/components/Modal'
 import Table from '@/components/Table'
 
+import theme from '@/styles/theme'
+
 import api from '@/services/api'
 
 import { CardProps } from '@/interfaces/cards'
-import { IconButton, Tooltip, colors } from '@mui/material'
+import {
+  IconButton,
+  TableBody,
+  TableCell,
+  TableContainer,
+  Table as TableMui,
+  TableRow,
+  Tooltip,
+  Typography,
+  colors,
+} from '@mui/material'
 
 const headers = [
   {
@@ -45,20 +57,32 @@ const headers = [
 const Cards = () => {
   const { search, normalizeCurrency } = useUtils()
   const { user } = useAuth()
-  console.log('🚀 ~ file: index.tsx:48 ~ Cards ~ user:', user)
 
   const [isLoading, setIsLoading] = useState(false)
   const [cards, setCards] = useState<CardProps[]>([])
   const [cardsFiltered, setCardsFiltered] = useState<CardProps[]>([])
   const [open, setOpen] = useState(false)
+  const [openCard, setOpenCard] = useState(false)
   const [selectedCard, setSelectedCard] = useState<CardProps>({} as CardProps)
+
+  useEffect(() => {
+    console.log('selectedCard', selectedCard)
+  }, [selectedCard])
 
   const handleOpen = useCallback(() => {
     setOpen(true)
   }, [])
 
+  const handleOpenCard = useCallback(() => {
+    setOpenCard(true)
+  }, [])
+
   const handleClose = useCallback(() => {
     setOpen(false)
+  }, [])
+
+  const handleCloseCard = useCallback(() => {
+    setOpenCard(false)
   }, [])
 
   const handleLoadCards = useCallback(async () => {
@@ -198,7 +222,99 @@ const Cards = () => {
           </>
         }
       />
+
+      <Modal
+        title="Visualizar Cartão"
+        description={
+          <TableContainer>
+            <TableMui sx={{ minWidth: 650 }}>
+              <TableBody>
+                <TableRow>
+                  <TableCell>
+                    <Typography color="text.secondary" gutterBottom>
+                      Nome: <strong>{selectedCard?.metadatas?.name}</strong>
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography color="text.secondary" gutterBottom>
+                      Digito: <strong>{selectedCard?.metadatas?.digits}</strong>
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography color="text.secondary" gutterBottom>
+                      Status:{' '}
+                      <strong>
+                        {(selectedCard?.status === 'requested' && (
+                          <Label color="primary" variant="filled">
+                            Solicitado
+                          </Label>
+                        )) ||
+                          (selectedCard?.status === 'approved' && (
+                            <Label color="success" variant="filled">
+                              Aprovado
+                            </Label>
+                          )) ||
+                          (selectedCard?.status === 'rejected' && (
+                            <Label color="error" variant="filled">
+                              Rejeitado
+                            </Label>
+                          )) ||
+                          (selectedCard?.status === 'canceled' && (
+                            <Label color="info" variant="filled">
+                              Cancelado
+                            </Label>
+                          )) ||
+                          (selectedCard?.status === 'processed' && (
+                            <Label color="warning" variant="filled">
+                              Processado
+                            </Label>
+                          ))}
+                      </strong>
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography color="text.secondary" gutterBottom>
+                      Solicitado:{' '}
+                      <strong>{new Date(selectedCard?.createdAt as Date).toLocaleDateString('pt-BR')}</strong>
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>
+                    <Typography color="text.secondary" gutterBottom>
+                      Limite: <strong>{normalizeCurrency(selectedCard?.metadatas?.limit)}</strong>
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography color="text.secondary" gutterBottom>
+                      Digito: <strong>{selectedCard?.metadatas?.digits}</strong>
+                    </Typography>
+                  </TableCell>
+                  {selectedCard?.updatedAt && (
+                    <TableCell>
+                      <Typography color="text.secondary" gutterBottom>
+                        Atualizado em:{' '}
+                        <strong>{new Date(selectedCard?.updatedAt as Date).toLocaleDateString('pt-BR')}</strong>
+                      </Typography>
+                    </TableCell>
+                  )}
+                </TableRow>
+              </TableBody>
+            </TableMui>
+          </TableContainer>
+        }
+        open={openCard}
+        onClose={handleCloseCard}
+        buttons={
+          <>
+            <Button onClick={handleCloseCard} variant="contained" color="warning">
+              Cancelar
+            </Button>
+          </>
+        }
+      />
       <Table
+        add={'/cards/create'}
         isLoading={isLoading}
         title="Cartões"
         headers={headers}
@@ -207,6 +323,16 @@ const Cards = () => {
         actions={(data: CardProps) => {
           return (
             <>
+              <Tooltip title="Visualizar" arrow placement="left">
+                <IconButton
+                  onClick={() => {
+                    handleOpenCard()
+                    setSelectedCard(data)
+                  }}
+                >
+                  <FaEye color={theme.palette.custom.stone} size={25} />
+                </IconButton>
+              </Tooltip>
               <Tooltip title="Alterar Status" arrow placement="left">
                 <IconButton
                   onClick={() => {

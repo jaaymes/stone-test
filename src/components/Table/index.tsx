@@ -1,7 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router'
 
 import { useUtils } from '@/hooks/useUtils'
 
+import theme from '@/styles/theme'
+
+import { AddCircle } from '@mui/icons-material'
 import {
   Box,
   CircularProgress,
@@ -21,6 +25,8 @@ import {
   Typography,
 } from '@mui/material'
 import { visuallyHidden } from '@mui/utils'
+
+import Button from '../Button'
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -107,23 +113,25 @@ const TableHead: React.FC<TableHeadProps> = ({ order, orderBy, onRequestSort, he
 
 interface TableToolbarProps {
   title: string
+  add?: string
 }
 
-const TableToolbar: React.FC<TableToolbarProps> = ({ title }) => {
+const TableToolbar: React.FC<TableToolbarProps> = ({ title, add }) => {
   const { handleSearch } = useUtils()
+  const navigate = useNavigate()
   return (
     <Toolbar
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
+        gap: 2,
       }}
     >
-      <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
+      <Typography sx={{ flex: '1 1 100%' }} variant="h6" component="div">
         {title}
       </Typography>
 
       <TextField
-        id="outlined-search"
         label="Pesquisar"
         type="search"
         variant="outlined"
@@ -131,6 +139,18 @@ const TableToolbar: React.FC<TableToolbarProps> = ({ title }) => {
         sx={{ width: '100%', maxWidth: '300px' }}
         size="small"
       />
+      {add && (
+        <Button
+          variant="contained"
+          onClick={() => {
+            navigate(add)
+          }}
+          px={4}
+          startIcon={<AddCircle />}
+        >
+          <Typography>Adicionar</Typography>
+        </Button>
+      )}
     </Toolbar>
   )
 }
@@ -142,15 +162,17 @@ interface TableProps {
   title: string
   actions?: (data: any) => JSX.Element
   isLoading?: boolean
+  add?: string
 }
 
-const Table = ({ headers, data, traitResponse, title, actions, isLoading }: TableProps) => {
+const Table = ({ headers, data, traitResponse, title, actions, isLoading, add }: TableProps) => {
   const [order, setOrder] = useState<Order>('asc')
   const [orderBy, setOrderBy] = useState<string>(headers[0].id)
   const [page, setPage] = useState(0)
   const [dense, setDense] = useState(false)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [rows, setRows] = useState<any[]>([])
+  const [progress, setProgress] = useState(10)
 
   const handleRequestSort = (_: React.MouseEvent<unknown>, property: string) => {
     const isAsc = orderBy === property && order === 'asc'
@@ -190,10 +212,19 @@ const Table = ({ headers, data, traitResponse, title, actions, isLoading }: Tabl
     handleRestructure()
   }, [data, handleRestructure])
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setProgress((prevProgress) => (prevProgress >= 100 ? 0 : prevProgress + 10))
+    }, 800)
+    return () => {
+      clearInterval(timer)
+    }
+  }, [])
+
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <TableToolbar title={title} />
+        <TableToolbar title={title} add={add} />
         <TableContainer>
           <TableMui sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'}>
             <TableHead
@@ -207,7 +238,26 @@ const Table = ({ headers, data, traitResponse, title, actions, isLoading }: Tabl
               <TableBody>
                 <TableRow>
                   <TableCell colSpan={headers.length + 1} align="center">
-                    <CircularProgress />
+                    {/* <CircularProgress size={80} sx={{ color: theme.palette.custom.stone }} /> */}
+                    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                      <CircularProgress size={80} sx={{ color: theme.palette.custom.stone }} />
+                      <Box
+                        sx={{
+                          top: 0,
+                          left: 0,
+                          bottom: 0,
+                          right: 0,
+                          position: 'absolute',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <Typography variant="caption" component="div" color="text.secondary">{`${Math.round(
+                          progress
+                        )}%`}</Typography>
+                      </Box>
+                    </Box>
                   </TableCell>
                 </TableRow>
               </TableBody>
