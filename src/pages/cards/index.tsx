@@ -199,6 +199,7 @@ const Cards = () => {
         }
       />
       <Table
+        isLoading={isLoading}
         title="Cartões"
         headers={headers}
         data={search.length > 0 ? cardsFiltered : cards}

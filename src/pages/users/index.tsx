@@ -112,6 +112,7 @@ const Users = () => {
   return (
     <>
       <Table
+        isLoading={isLoading}
         title="Usuários"
         headers={headers}
         data={search.length > 0 ? usersFiltered : users}
