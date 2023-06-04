@@ -20,9 +20,7 @@ describe('SideNavbar', () => {
 
   beforeEach(() => {
     navigate = jest.fn()
-    jest
-      .spyOn(require('react-router-dom'), 'useNavigate')
-      .mockReturnValue(navigate)
+    jest.spyOn(require('react-router-dom'), 'useNavigate').mockReturnValue(navigate)
   })
 
   afterEach(() => {

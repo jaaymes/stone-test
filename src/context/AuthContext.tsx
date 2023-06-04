@@ -32,9 +32,7 @@ export const AuthProvider: React.FC<IContextProvider> = ({ children }) => {
       .get('/analysts')
       .then((response) => {
         const users = response.data
-        const user = users.find(
-          (user: any) => user.email === email && user.password === password
-        )
+        const user = users.find((user: any) => user.email === email && user.password === password)
         if (!user) {
           setAuth(false)
           toast.error('Usuário ou senha inválidos')

@@ -12,9 +12,7 @@ describe('Table', () => {
       { name: 'John', age: '30' },
       { name: 'Jane', age: '25' },
     ]
-    const { container } = render(
-      <Table headers={headers} data={data} title="Test Table" />
-    )
+    const { container } = render(<Table headers={headers} data={data} title="Test Table" />)
     expect(container.firstChild).toBeInTheDocument()
   })
 })
