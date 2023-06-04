@@ -9,6 +9,7 @@ import Login from '@/pages/login'
 import Users from '@/pages/users'
 
 import CreateCards from './pages/cards/create'
+import CreateUser from './pages/users/create'
 import PrivateRoute from './routes/privateRoute'
 
 function App() {
@@ -37,8 +38,11 @@ function App() {
               <Routes>
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/users" element={<Users />} />
+                <Route path="/users/create" element={<CreateUser />} />
+                <Route path="/users/edit/:id?" element={<CreateUser />} />
                 <Route path="/cards" element={<Cards />} />
                 <Route path="/cards/create" element={<CreateCards />} />
+                <Route path="/cards/edit/:id?" element={<CreateCards />} />
                 <Route path="/audits" element={<Audits />} />
               </Routes>
             </Layout>

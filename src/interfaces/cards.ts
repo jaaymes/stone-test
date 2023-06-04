@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 // eslint-disable-next-line semi
-import { UserPros } from './users'
+import { UserProps } from './users'
 
 export interface CardProps {
   createdAt: Date | string | null
@@ -10,5 +10,5 @@ export interface CardProps {
   statusLabel?: JSX.Element
   updatedAt: Date | string | null
   user_id: number
-  user?: UserPros
+  user?: UserProps
 }

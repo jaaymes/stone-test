@@ -223,10 +223,10 @@ const Table = ({ headers, data, traitResponse, title, actions, isLoading, add }:
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
+      <Paper sx={{ width: '100%', mb: 2, pl: 1 }}>
         <TableToolbar title={title} add={add} />
         <TableContainer>
-          <TableMui sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'}>
+          <TableMui size={dense ? 'small' : 'medium'}>
             <TableHead
               action={actions ? true : false}
               order={order}
@@ -268,7 +268,14 @@ const Table = ({ headers, data, traitResponse, title, actions, isLoading, add }:
                     <TableRow key={index}>
                       {headers.map((header) => {
                         return (
-                          <TableCell align={header.numeric ? 'right' : 'left'} key={header.id}>
+                          <TableCell
+                            sx={{
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                            }}
+                            align={header.numeric ? 'right' : 'left'}
+                            key={header.id}
+                          >
                             {row[header.id]}
                           </TableCell>
                         )

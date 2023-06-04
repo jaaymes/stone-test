@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 
 import { useAuth } from '@/hooks/useAuth'
 
@@ -32,6 +32,7 @@ const SideNavbar: React.FC<SideNavbarProps> = ({ isOpen }) => {
   const theme = useTheme()
   const navigation = useNavigate()
   const { signOut } = useAuth()
+  const location = useLocation()
 
   const drawerContent = (
     <>
@@ -91,6 +92,7 @@ const SideNavbar: React.FC<SideNavbarProps> = ({ isOpen }) => {
                 margin: '6px 14px',
                 padding: '10px',
                 borderRadius: '8px',
+                backgroundColor: location.pathname === key.path ? colors.grey[200] : 'transparent',
                 '&:hover': {
                   backgroundColor: colors.grey[200],
                 },

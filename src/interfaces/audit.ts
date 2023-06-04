@@ -1,13 +1,13 @@
 import { CardProps } from './cards'
-import { UserPros } from './users'
+import { UserProps } from './users'
 
 export interface AuditProps {
-  after: CardProps
-  before: CardProps
+  after: CardProps & UserProps
+  before: CardProps & UserProps
   createdAt: Date | string | null
   typeText?: string
   id: number
   requestedBy: number
   type: string
-  user: UserPros
+  user: UserProps
 }

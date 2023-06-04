@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import { FaExchangeAlt, FaEye } from 'react-icons/fa'
+import { FaEdit, FaExchangeAlt, FaEye } from 'react-icons/fa'
+import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 
 import { useAuth } from '@/hooks/useAuth'
@@ -11,6 +12,8 @@ import Modal from '@/components/Modal'
 import Table from '@/components/Table'
 
 import theme from '@/styles/theme'
+
+import { normalizeCurrency } from '@/utils/normalize'
 
 import api from '@/services/api'
 
@@ -24,7 +27,6 @@ import {
   TableRow,
   Tooltip,
   Typography,
-  colors,
 } from '@mui/material'
 
 const headers = [
@@ -55,8 +57,9 @@ const headers = [
 ]
 
 const Cards = () => {
-  const { search, normalizeCurrency } = useUtils()
+  const { search } = useUtils()
   const { user } = useAuth()
+  const navigate = useNavigate()
 
   const [isLoading, setIsLoading] = useState(false)
   const [cards, setCards] = useState<CardProps[]>([])
@@ -333,6 +336,11 @@ const Cards = () => {
                   <FaEye color={theme.palette.custom.stone} size={25} />
                 </IconButton>
               </Tooltip>
+              <Tooltip title="Editar" arrow placement="left">
+                <IconButton onClick={() => navigate(`/cards/edit/${data.id}`)}>
+                  <FaEdit color={theme.palette.custom.stone} size={25} />
+                </IconButton>
+              </Tooltip>
               <Tooltip title="Alterar Status" arrow placement="left">
                 <IconButton
                   onClick={() => {
@@ -341,7 +349,7 @@ const Cards = () => {
                     setSelectedCard(data)
                   }}
                 >
-                  <FaExchangeAlt color={colors.green[400]} size={25} />
+                  <FaExchangeAlt color={theme.palette.custom.stone} size={25} />
                 </IconButton>
               </Tooltip>
             </>

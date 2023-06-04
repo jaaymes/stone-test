@@ -1,4 +1,4 @@
-export interface UserPros {
+export interface UserProps {
   name: string | null
   email: string
   BirthDate: Date | string
@@ -13,6 +13,7 @@ export interface UserPros {
     state: string
     neighborhood: string
     postalCode: string
+    street: string
   }
   salaryBase: number
   id: number
