@@ -40,6 +40,7 @@ export const AuthProvider: React.FC<IContextProvider> = ({ children }) => {
         }
         setAuth(true)
         localStorage.setItem('auth', 'true')
+        localStorage.setItem('user', JSON.stringify(user))
         setUser(user)
       })
       .catch(() => {
@@ -56,8 +57,12 @@ export const AuthProvider: React.FC<IContextProvider> = ({ children }) => {
 
   useEffect(() => {
     const auth = localStorage.getItem('auth') // nao é seguro, é apenas um exemplo
+    const user = localStorage.getItem('user')
     if (auth) {
       setAuth(true)
+    }
+    if (user) {
+      setUser(JSON.parse(user))
     }
   }, [])
 

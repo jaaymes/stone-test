@@ -110,14 +110,14 @@ const Users = () => {
   }, [handleSearch, search])
 
   return (
-    <div>
+    <>
       <Table
         title="Usuários"
         headers={headers}
         data={search.length > 0 ? usersFiltered : users}
         traitResponse={handleTraitResponse}
       />
-    </div>
+    </>
   )
 }
 

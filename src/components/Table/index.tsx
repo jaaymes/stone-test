@@ -4,13 +4,14 @@ import { useUtils } from '@/hooks/useUtils'
 
 import {
   Box,
+  CircularProgress,
   FormControlLabel,
   Paper,
   Switch,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
+  TableHead as TableHeadMui,
   Table as TableMui,
   TablePagination,
   TableRow,
@@ -61,20 +62,21 @@ interface HeadCell {
   numeric: boolean
 }
 
-interface EnhancedTableProps {
+interface TableHeadProps {
   onRequestSort: (event: React.MouseEvent<unknown>, property: string) => void
   order: Order
   orderBy: string
   headers: readonly HeadCell[]
+  action: boolean
 }
 
-function EnhancedTableHead({ order, orderBy, onRequestSort, headers }: EnhancedTableProps) {
+const TableHead: React.FC<TableHeadProps> = ({ order, orderBy, onRequestSort, headers, action }) => {
   const createSortHandler = (property: string) => (event: React.MouseEvent<unknown>) => {
     onRequestSort(event, property)
   }
 
   return (
-    <TableHead>
+    <TableHeadMui>
       <TableRow>
         {headers.map((headCell) => (
           <TableCell
@@ -97,16 +99,17 @@ function EnhancedTableHead({ order, orderBy, onRequestSort, headers }: EnhancedT
             </TableSortLabel>
           </TableCell>
         ))}
+        {action && <TableCell align="left">Ações</TableCell>}
       </TableRow>
-    </TableHead>
+    </TableHeadMui>
   )
 }
 
-interface EnhancedTableToolbarProps {
+interface TableToolbarProps {
   title: string
 }
 
-function EnhancedTableToolbar({ title }: EnhancedTableToolbarProps) {
+const TableToolbar: React.FC<TableToolbarProps> = ({ title }) => {
   const { handleSearch } = useUtils()
   return (
     <Toolbar
@@ -137,9 +140,11 @@ interface TableProps {
   data: any[]
   traitResponse?: (data: any) => any
   title: string
+  actions?: (data: any) => JSX.Element
+  isLoading?: boolean
 }
 
-const Table = ({ headers, data, traitResponse, title }: TableProps) => {
+const Table = ({ headers, data, traitResponse, title, actions, isLoading }: TableProps) => {
   const [order, setOrder] = useState<Order>('asc')
   const [orderBy, setOrderBy] = useState<string>(headers[0].id)
   const [page, setPage] = useState(0)
@@ -188,34 +193,51 @@ const Table = ({ headers, data, traitResponse, title }: TableProps) => {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar title={title} />
+        <TableToolbar title={title} />
         <TableContainer>
           <TableMui sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size={dense ? 'small' : 'medium'}>
-            <EnhancedTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort} headers={headers} />
-            <TableBody>
-              {visibleRows.map((row, index) => {
-                return (
-                  <TableRow key={index}>
-                    {headers.map((header) => {
-                      return (
-                        <TableCell align={header.numeric ? 'right' : 'left'} key={header.id}>
-                          {row[header.id]}
-                        </TableCell>
-                      )
-                    })}
-                  </TableRow>
-                )
-              })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
+            <TableHead
+              action={actions ? true : false}
+              order={order}
+              orderBy={orderBy}
+              onRequestSort={handleRequestSort}
+              headers={headers}
+            />
+            {isLoading ? (
+              <TableBody>
+                <TableRow>
+                  <TableCell colSpan={headers.length + 1} align="center">
+                    <CircularProgress />
+                  </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
+              </TableBody>
+            ) : (
+              <TableBody>
+                {visibleRows.map((row, index) => {
+                  return (
+                    <TableRow key={index}>
+                      {headers.map((header) => {
+                        return (
+                          <TableCell align={header.numeric ? 'right' : 'left'} key={header.id}>
+                            {row[header.id]}
+                          </TableCell>
+                        )
+                      })}
+                      {actions && <TableCell align="left">{actions(row)}</TableCell>}
+                    </TableRow>
+                  )
+                })}
+                {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: (dense ? 33 : 53) * emptyRows,
+                    }}
+                  >
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            )}
           </TableMui>
         </TableContainer>
         <TablePagination

@@ -86,13 +86,6 @@ const onlyUnique = (value: any, index: any, self: any) => {
   return self.indexOf(value) === index
 }
 
-
-const randomStatusCard = () => {
-  const status = ['requested', 'approved', 'processed', 'canceled', 'rejected']
-  const randomIndex = generateRandomNumber(0, status.length - 1)
-  return status[randomIndex]
-}
-
 const getUsers = () => {
   return references.users.map((value, index) => ({
     name: value,
@@ -141,7 +134,7 @@ const getCards = () => {
     .map((value, index) => ({
       createdAt: randomDate(new Date(2012, 0, 1), new Date()),
       updatedAt: null,
-      status: randomStatusCard(), // Requested -> Approved -> Processed | Requested -> Rejected -> Canceled
+      status: "requested", // Requested -> Approved -> Processed | Requested -> Rejected -> Canceled
       id: index + 1000,
       user_id: index,
       metadatas: {
