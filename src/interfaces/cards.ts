@@ -5,7 +5,7 @@ import { UserProps } from './users'
 export interface CardProps {
   createdAt: Date | string | null
   id: number
-  metadatas: { name: string; digits: number; limit: number | string }
+  metadatas: { name: string; digits: number; limit?: number | string }
   status: string
   statusLabel?: JSX.Element
   name?: string

@@ -136,6 +136,7 @@ const CreateUser = () => {
           const _data = {
             ...data,
             BirthDate: new Date(data.BirthDate).toISOString(),
+            updatedAt: new Date().toISOString(),
           }
           await api.put(`/users/${id}`, _data)
           toast.success('Usuário atualizado com sucesso')
@@ -146,7 +147,7 @@ const CreateUser = () => {
             const formData = {
               before: before,
               after: after,
-              requestedBy: user?.id,
+              requestedBy: userContext?.id,
               type: 'update-user',
             }
             await api.post('/audits', formData)
@@ -156,7 +157,25 @@ const CreateUser = () => {
             toast.error('Erro ao salvar log')
           }
         } else {
-          await api.post('/users', data)
+          const _data = {
+            ...data,
+            BirthDate: new Date(data.BirthDate).toISOString(),
+            createdAt: new Date().toDateString(),
+            updatedAt: new Date().toDateString(),
+          }
+
+          const response = await api.post('/users', _data)
+
+          if (response.status === 201) {
+            const formData = {
+              before: null,
+              after: response.data,
+              requestedBy: userContext?.id,
+              type: 'create-user',
+            }
+            await api.post('/audits', formData)
+          }
+
           toast.success('Usuário salvo com sucesso')
           navigate('/users')
         }
@@ -164,7 +183,7 @@ const CreateUser = () => {
         toast.error(error.response.data.message || 'Erro ao salvar usuário')
       }
     },
-    [id, navigate, user]
+    [id, navigate, user, userContext?.id]
   )
 
   useEffect(() => {

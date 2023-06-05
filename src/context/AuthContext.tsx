@@ -77,7 +77,8 @@ export const AuthProvider: React.FC<IContextProvider> = ({ children }) => {
 
     if (auth) {
       setAuth(true)
-    } else {
+    }
+    if (!auth) {
       setAuth(false)
     }
     if (user) {

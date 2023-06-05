@@ -8,7 +8,6 @@ import Layout from '@/pages/layout'
 import Login from '@/pages/login'
 import Users from '@/pages/users'
 
-import { useAuth } from './hooks/useAuth'
 import CreateCards from './pages/cards/create'
 import CreateUser from './pages/users/create'
 import PrivateRoute from './routes/privateRoute'
@@ -16,21 +15,21 @@ import PrivateRoute from './routes/privateRoute'
 function App() {
   const location = useLocation()
   const navigate = useNavigate()
-  const { auth, signOut } = useAuth()
 
   useEffect(() => {
     localStorage.setItem('currentRoute', location.pathname)
-  }, [auth, location])
+  }, [location])
 
   useEffect(() => {
     const savedRoute = localStorage.getItem('currentRoute')
+    const auth = localStorage.getItem('auth')
     if (savedRoute && auth) {
       navigate(savedRoute)
-    } else {
-      navigate('/')
-      signOut()
     }
-  }, [auth, navigate, signOut])
+    if (!auth) {
+      navigate('/')
+    }
+  }, [navigate])
 
   return (
     <Routes>

@@ -77,11 +77,11 @@ const CreateCards = () => {
   const handleOnSubmit = useCallback(
     async (data: CardProps) => {
       try {
-        const _formData = {
+        let _formData = {
           ...data,
           metadatas: {
             ...data.metadatas,
-            limit: Number(data.metadatas.limit.toString().replace(/\D/g, '')),
+            limit: Number(data.metadatas?.limit?.toString().replace(/\D/g, '')) || 0,
           },
         }
         if (id) {
@@ -93,18 +93,24 @@ const CreateCards = () => {
             await api.post('/audits', {
               before,
               after,
-              action: 'update-card',
-              requestBy: userAuth?.id,
+              type: 'update-card',
+              requestedBy: userAuth?.id,
             })
           }
         } else {
+          _formData = {
+            ..._formData,
+            status: 'requested',
+            createdAt: new Date().toDateString(),
+            updatedAt: new Date().toISOString(),
+          }
           const response = await api.post('/cards', _formData)
           if (response.data) {
             await api.post('/audits', {
               before: null,
               after: response.data,
-              action: 'create-card',
-              requestBy: userAuth?.id,
+              type: 'create-card',
+              requestedBy: userAuth?.id,
             })
           }
           toast.success('Cartão criado com sucesso')
@@ -122,8 +128,8 @@ const CreateCards = () => {
   }, [handleLoadUsers])
 
   useEffect(() => {
-    handleLoadCard()
-  }, [handleLoadCard])
+    if (id) handleLoadCard()
+  }, [handleLoadCard, id])
 
   useEffect(() => {
     console.log('wacthFields', wacthFields)

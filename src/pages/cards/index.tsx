@@ -163,9 +163,8 @@ const Cards = () => {
         const formData = {
           ...selectedCard,
           status: status,
-          updatedAt: new Date(),
+          updatedAt: new Date().toDateString(),
         }
-        console.log('🚀 ~ file: index.tsx:164 ~ formData:', formData)
         setIsLoading(true)
         const response = await api.put(`/cards/${id}`, formData)
         if (response) {

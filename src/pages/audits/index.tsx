@@ -111,9 +111,24 @@ const Audits = () => {
             Troca de Status
           </Label>
         )) ||
+        (d?.type === 'update-card' && (
+          <Label color="primary" variant="filled">
+            Atualização de Cartão
+          </Label>
+        )) ||
         (d?.type === 'update-user' && (
           <Label color="secondary" variant="filled">
             Atualizar Usuário
+          </Label>
+        )) ||
+        (d?.type === 'create-user' && (
+          <Label color="secondary" variant="filled">
+            Criar Usuário
+          </Label>
+        )) ||
+        (d?.type === 'create-card' && (
+          <Label color="primary" variant="filled">
+            Criar Cartão
           </Label>
         )),
     }))
@@ -159,9 +174,162 @@ const Audits = () => {
         title="Registro de Log"
         description={
           <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <Card variant="outlined">
-                {selectedCard.type === 'card-status-change' && (
+            {selectedCard.type === 'create-card' && (
+              <Grid item xs={12} md={12}>
+                <Card variant="outlined">
+                  <React.Fragment>
+                    <CardContent>
+                      <Typography variant="body2">
+                        Nome: <strong>{selectedCard?.after?.metadatas?.name}</strong>
+                        <br />
+                      </Typography>
+                      <Typography variant="body2">
+                        Digito: <strong>{selectedCard?.after?.metadatas?.digits}</strong>
+                        <br />
+                      </Typography>
+                      <Typography variant="body2">
+                        Status:{' '}
+                        <strong>
+                          {(selectedCard?.after?.status === 'requested' && (
+                            <Label color="primary" variant="filled">
+                              Solicitado
+                            </Label>
+                          )) ||
+                            (selectedCard?.after?.status === 'approved' && (
+                              <Label color="success" variant="filled">
+                                Aprovado
+                              </Label>
+                            )) ||
+                            (selectedCard?.after?.status === 'rejected' && (
+                              <Label color="error" variant="filled">
+                                Rejeitado
+                              </Label>
+                            )) ||
+                            (selectedCard?.after?.status === 'canceled' && (
+                              <Label color="info" variant="filled">
+                                Cancelado
+                              </Label>
+                            )) ||
+                            (selectedCard?.after?.status === 'processed' && (
+                              <Label color="warning" variant="filled">
+                                Processado
+                              </Label>
+                            ))}
+                        </strong>
+                        <br />
+                      </Typography>
+                      <Typography variant="body2">
+                        Solicitado:{' '}
+                        <strong>
+                          {new Date(selectedCard?.before?.createdAt as Date).toLocaleDateString('pt-BR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                          })}
+                        </strong>
+                        <br />
+                      </Typography>
+                      <Typography variant="body2">&nbsp;</Typography>
+                    </CardContent>
+                  </React.Fragment>
+                </Card>
+              </Grid>
+            )}
+
+            {selectedCard.type === 'create-user' && (
+              <Grid item xs={12} md={12}>
+                <Card variant="outlined">
+                  <React.Fragment>
+                    <CardContent>
+                      <Typography variant="body2">
+                        Nome: <strong>{selectedCard?.after?.name}</strong>
+                        <br />
+                      </Typography>
+                      <Typography variant="body2">
+                        Email: <strong>{selectedCard?.after?.email}</strong>
+                        <br />
+                      </Typography>
+                      <Typography variant="body2">
+                        Nascimento:{' '}
+                        <strong>
+                          {new Date(selectedCard?.after?.BirthDate as Date).toLocaleDateString('pt-BR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                          })}
+                        </strong>
+                        <br />
+                      </Typography>
+
+                      <Typography variant="body2">
+                        Documento: <strong>{normalizeCpf(selectedCard?.after?.document)}</strong>
+                        <br />
+                      </Typography>
+                      <Typography variant="body2">
+                        Criado:{' '}
+                        <strong>
+                          {new Date(selectedCard?.after?.createdAt as Date).toLocaleDateString('pt-BR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                          })}
+                        </strong>
+                        <br />
+                      </Typography>
+
+                      <Typography variant="body2">
+                        Atualizado:{' '}
+                        <strong>
+                          {new Date(selectedCard?.after?.updatedAt as Date).toLocaleDateString('pt-BR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                          })}
+                        </strong>
+                        <br />
+                      </Typography>
+                      <Typography variant="body2">
+                        Endereço:{' '}
+                        <strong>{`${selectedCard?.after?.address?.street || 'Sem Nome'}, ${
+                          selectedCard?.after?.address?.streetNumber
+                        } - ${selectedCard?.after?.address?.neighborhood} - ${selectedCard?.after?.address?.city} - ${
+                          selectedCard?.after?.address?.state
+                        }`}</strong>
+                        <br />
+                      </Typography>
+                      <Typography variant="body2">
+                        Salario Base: <strong>{normalizeCurrency(selectedCard?.after?.salaryBase)}</strong>
+                        <br />
+                      </Typography>
+                      <Typography variant="body2">
+                        Documento Valido?:{' '}
+                        <strong>{selectedCard?.after?.metadatas?.validDocument ? 'Sim' : 'Não'}</strong>
+                        <br />
+                      </Typography>
+                      <Typography variant="body2">
+                        Usuário Verificado?: <strong>{selectedCard?.after?.metadatas?.verified ? 'Sim' : 'Não'}</strong>
+                      </Typography>
+                      <Typography variant="body2" color="body2" gutterBottom>
+                        Funcionalidades Ativas:{' '}
+                        <strong>
+                          {selectedCard?.after?.enabledFeatures.map((item, index) => {
+                            const feature = features.find((f) => f.id === item)
+                            if (!feature) return ''
+                            return `${feature.name}${
+                              index === selectedCard?.after?.enabledFeatures.length - 1 ? '' : ', '
+                            }`
+                          })}
+                        </strong>
+                      </Typography>
+                    </CardContent>
+                  </React.Fragment>
+                </Card>
+              </Grid>
+            )}
+
+            {(selectedCard.type === 'card-status-change' || selectedCard.type === 'update-card') && (
+              <Grid item xs={12} md={6}>
+                <Card variant="outlined">
                   <React.Fragment>
                     <CardContent>
                       <Typography sx={{ fontSize: 18, fontWeight: 700 }} color="text.secondary" gutterBottom>
@@ -220,8 +388,90 @@ const Audits = () => {
                       <Typography variant="body2">&nbsp;</Typography>
                     </CardContent>
                   </React.Fragment>
-                )}
-                {selectedCard.type === 'update-user' && (
+                </Card>
+              </Grid>
+            )}
+
+            {(selectedCard.type === 'card-status-change' || selectedCard.type === 'update-card') && (
+              <Grid item xs={12} md={6}>
+                <Card variant="outlined">
+                  <React.Fragment>
+                    <CardContent>
+                      <Typography sx={{ fontSize: 18, fontWeight: 700 }} color="text.secondary" gutterBottom>
+                        Depois
+                      </Typography>
+                      <Typography variant="body2">
+                        Nome: <strong>{selectedCard?.after?.metadatas?.name}</strong>
+                        <br />
+                      </Typography>
+                      <Typography variant="body2">
+                        Digito: <strong>{selectedCard?.after?.metadatas?.digits}</strong>
+                        <br />
+                      </Typography>
+                      <Typography variant="body2">
+                        Status:{' '}
+                        <strong>
+                          {(selectedCard?.after?.status === 'requested' && (
+                            <Label color="primary" variant="filled">
+                              Solicitado
+                            </Label>
+                          )) ||
+                            (selectedCard?.after?.status === 'approved' && (
+                              <Label color="success" variant="filled">
+                                Aprovado
+                              </Label>
+                            )) ||
+                            (selectedCard?.after?.status === 'rejected' && (
+                              <Label color="error" variant="filled">
+                                Rejeitado
+                              </Label>
+                            )) ||
+                            (selectedCard?.after?.status === 'canceled' && (
+                              <Label color="info" variant="filled">
+                                Cancelado
+                              </Label>
+                            )) ||
+                            (selectedCard?.after?.status === 'processed' && (
+                              <Label color="warning" variant="filled">
+                                Processado
+                              </Label>
+                            ))}
+                        </strong>
+                        <br />
+                      </Typography>
+                      <Typography variant="body2">
+                        Solicitado:{' '}
+                        <strong>
+                          {new Date(selectedCard?.before?.createdAt as Date).toLocaleDateString('pt-BR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                          })}
+                        </strong>
+                        <br />
+                      </Typography>
+                      {selectedCard?.after?.updatedAt && (
+                        <Typography variant="body2">
+                          Aprovado em:{' '}
+                          <strong>
+                            {new Date(selectedCard?.after?.updatedAt as Date).toLocaleDateString('pt-BR', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric',
+                            })}
+                          </strong>
+                          <br />
+                        </Typography>
+                      )}
+                    </CardContent>
+                  </React.Fragment>
+                </Card>
+              </Grid>
+            )}
+
+            {selectedCard.type === 'update-user' && (
+              <Grid item xs={12} md={6}>
+                <Card variant="outlined">
                   <React.Fragment>
                     <CardContent>
                       <Typography sx={{ fontSize: 18, fontWeight: 700 }} color="text.secondary" gutterBottom>
@@ -310,83 +560,13 @@ const Audits = () => {
                       </Typography>
                     </CardContent>
                   </React.Fragment>
-                )}
-              </Card>
-            </Grid>
+                </Card>
+              </Grid>
+            )}
 
-            <Grid item xs={12} md={6}>
-              <Card variant="outlined">
-                {selectedCard.type === 'card-status-change' && (
-                  <React.Fragment>
-                    <CardContent>
-                      <Typography sx={{ fontSize: 18, fontWeight: 700 }} color="text.secondary" gutterBottom>
-                        Depois
-                      </Typography>
-                      <Typography variant="body2">
-                        Nome: <strong>{selectedCard?.after?.metadatas?.name}</strong>
-                        <br />
-                      </Typography>
-                      <Typography variant="body2">
-                        Digito: <strong>{selectedCard?.after?.metadatas?.digits}</strong>
-                        <br />
-                      </Typography>
-                      <Typography variant="body2">
-                        Status:{' '}
-                        <strong>
-                          {(selectedCard?.after?.status === 'requested' && (
-                            <Label color="primary" variant="filled">
-                              Solicitado
-                            </Label>
-                          )) ||
-                            (selectedCard?.after?.status === 'approved' && (
-                              <Label color="success" variant="filled">
-                                Aprovado
-                              </Label>
-                            )) ||
-                            (selectedCard?.after?.status === 'rejected' && (
-                              <Label color="error" variant="filled">
-                                Rejeitado
-                              </Label>
-                            )) ||
-                            (selectedCard?.after?.status === 'canceled' && (
-                              <Label color="info" variant="filled">
-                                Cancelado
-                              </Label>
-                            )) ||
-                            (selectedCard?.after?.status === 'processed' && (
-                              <Label color="warning" variant="filled">
-                                Processado
-                              </Label>
-                            ))}
-                        </strong>
-                        <br />
-                      </Typography>
-                      <Typography variant="body2">
-                        Solicitado:{' '}
-                        <strong>
-                          {new Date(selectedCard?.before?.createdAt as Date).toLocaleDateString('pt-BR', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                          })}
-                        </strong>
-                        <br />
-                      </Typography>
-                      <Typography variant="body2">
-                        Aprovado em:{' '}
-                        <strong>
-                          {new Date(selectedCard?.after?.updatedAt as Date).toLocaleDateString('pt-BR', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                          })}
-                        </strong>
-                        <br />
-                      </Typography>
-                    </CardContent>
-                  </React.Fragment>
-                )}
-                {selectedCard.type === 'update-user' && (
+            {selectedCard.type === 'update-user' && (
+              <Grid item xs={12} md={6}>
+                <Card variant="outlined">
                   <React.Fragment>
                     <CardContent>
                       <Typography sx={{ fontSize: 18, fontWeight: 700 }} color="text.secondary" gutterBottom>
@@ -473,9 +653,9 @@ const Audits = () => {
                       </Typography>
                     </CardContent>
                   </React.Fragment>
-                )}
-              </Card>
-            </Grid>
+                </Card>
+              </Grid>
+            )}
           </Grid>
         }
         open={open}
