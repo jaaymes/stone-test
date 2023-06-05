@@ -42,9 +42,9 @@ var generator_1 = require("./generator");
  * React App: http://localhost:3000 | https://dashboard.heroku.com/apps/nome-do-meu-app
  */
 dotenv_1.default.config({ path: path.resolve(__dirname, '../../.env') });
-var port = process.env.PORT || '3000';
 var server = (0, express_1.default)();
 var isDev = process.env.NODE_ENV !== 'production';
+var port = isDev ? '3001' : process.env.PORT || '3000';
 if (isDev) {
     server.use((0, cors_1.default)());
     port = '3001';
@@ -62,5 +62,5 @@ if (!isDev) {
     });
 }
 server.listen(port, function () {
-    console.log("API running on port ".concat(port, ", access it with http://localhost:").concat(port, "/api/users \n\n    React App running on port 3000, access it with http://localhost:3000/"));
+    console.log("API running on port ".concat(port, ", access it with http://localhost:").concat(port, "/api/users \n\n    React App running on port ").concat(port, ", access it with http://localhost:").concat(port, "/"));
 });
