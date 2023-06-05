@@ -44,8 +44,8 @@ var generator_1 = require("./generator");
 dotenv_1.default.config({ path: path.resolve(__dirname, '../../.env') });
 var server = (0, express_1.default)();
 var isDev = process.env.NODE_ENV !== 'production';
-var port = process.env.PORT_API || '3000';
-console.log('port', port);
+var port = process.env.PORT || '3000';
+console.log('port', process.env.PORT);
 if (isDev) {
     server.use((0, cors_1.default)());
     port = '3001';
