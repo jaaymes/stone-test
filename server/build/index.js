@@ -44,7 +44,7 @@ var generator_1 = require("./generator");
 dotenv_1.default.config({ path: path.resolve(__dirname, '../../.env') });
 var server = (0, express_1.default)();
 var isDev = process.env.NODE_ENV !== 'production';
-var port = isDev ? '3001' : process.env.PORT || '3000';
+var port = isDev ? '3001' : process.env.PORT;
 if (isDev) {
     server.use((0, cors_1.default)());
     port = '3001';
@@ -61,6 +61,6 @@ if (!isDev) {
         res.sendFile(path.join(__dirname, '../../build', 'index.html'));
     });
 }
-server.listen(port, function () {
+server.listen(port || 3000, function () {
     console.log("API running on port ".concat(port, ", access it with http://localhost:").concat(port, "/api/users \n\n    React App running on port ").concat(port, ", access it with http://localhost:").concat(port, "/"));
 });
