@@ -9,7 +9,7 @@ const isDev = process.env.NODE_ENV !== 'production'
 export default defineConfig({
   plugins: [react(), reactRefresh()],
   server: {
-    port: isDev ? undefined : 3001,
+    port: isDev ? undefined : 3000,
   },
   build: {
     outDir: 'build',
