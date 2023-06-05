@@ -22,6 +22,8 @@ const server = express()
 const isDev = process.env.NODE_ENV !== 'production'
 let port = process.env.PORT_API || '3000'
 
+console.log('port', port)
+
 if (isDev) {
   server.use(cors())
   port = '3001'
