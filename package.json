@@ -7,7 +7,8 @@
   },
   "scripts": {
     "dev": "concurrently --kill-others \"yarn run dev:server\" \"yarn run dev:client\"",
-    "build": "tsc && vite build",
+    "build": "yarn run build:server && yarn run build:client",
+    "build:client": "tsc && vite build",
     "build:server": "tsc --project tsconfig.server.json",
     "dev:client": "vite",
     "dev:server": "yarn run build:server && node ./server/build/index.js",
