@@ -38,7 +38,7 @@ interface INavbarProps {
 const SideNavbar: React.FC<SideNavbarProps> = ({ isOpen }) => {
   const theme = useTheme()
   const navigation = useNavigate()
-  const { signOut, user } = useAuth()
+  const { signOut, user, auth } = useAuth()
   const location = useLocation()
   const [routesAllowed, setRoutesAllowed] = useState<INavbarProps[]>([])
 
@@ -55,6 +55,12 @@ const SideNavbar: React.FC<SideNavbarProps> = ({ isOpen }) => {
   useEffect(() => {
     handleRestructureRoutes()
   }, [handleRestructureRoutes, location.pathname])
+
+  useEffect(() => {
+    if (!auth) {
+      navigation('/')
+    }
+  }, [auth, navigation, location.pathname])
 
   const drawerContent = (
     <>

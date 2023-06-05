@@ -148,9 +148,12 @@ const CreateCards = () => {
               <Grid item xs={12} md={6}>
                 <Input name="metadatas.name" label="Nome impresso no cartão" fullWidth />
               </Grid>
-              <Grid item xs={12} md={3}>
-                <Input normalize={normalizeCurrency} name="metadatas.limit" label="Limite" fullWidth />
-              </Grid>
+              {userAuth?.roles.includes('n2') && (
+                <Grid item xs={12} md={3}>
+                  <Input normalize={normalizeCurrency} name="metadatas.limit" label="Limite" fullWidth />
+                </Grid>
+              )}
+
               <Grid item xs={12} md={3}>
                 <Input name="metadatas.digits" label="Digitos" disabled={id ? true : false} fullWidth />
               </Grid>

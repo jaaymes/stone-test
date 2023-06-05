@@ -111,7 +111,7 @@ const Cards = () => {
       ...d,
       name: d?.metadatas?.name,
       digits: d?.metadatas?.digits,
-      limit: user?.roles.includes('n2') ? normalizeCurrency(d?.metadatas?.limit || 0) : 'R$ ****',
+      limit: user?.roles.includes('n2') ? normalizeCurrency((d?.metadatas?.limit as number) || 0) : 'R$ ****',
       statusLabel:
         (d?.status === 'requested' && (
           <Label color="primary" variant="filled">
@@ -314,7 +314,7 @@ const Cards = () => {
                   {user?.roles.includes('n2') && (
                     <TableCell>
                       <Typography color="text.secondary" gutterBottom>
-                        Limite: <strong>{normalizeCurrency(selectedCard?.metadatas?.limit)}</strong>
+                        Limite: <strong>{normalizeCurrency(selectedCard?.metadatas?.limit as number)}</strong>
                       </Typography>
                     </TableCell>
                   )}
