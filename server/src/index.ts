@@ -18,9 +18,9 @@ import { db } from './generator'
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') })
 
-let port = '3000'
 const server = express()
 const isDev = process.env.NODE_ENV !== 'production'
+let port = isDev ? '3001' : process.env.PORT || '3000'
 
 if (isDev) {
   server.use(cors())
