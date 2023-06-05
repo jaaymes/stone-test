@@ -8,6 +8,9 @@ const isDev = process.env.NODE_ENV !== 'production'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), reactRefresh()],
+  server: {
+    port: isDev ? undefined : 3001,
+  },
   build: {
     outDir: 'build',
   },

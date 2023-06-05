@@ -20,7 +20,7 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env') })
 
 const server = express()
 const isDev = process.env.NODE_ENV !== 'production'
-let port = isDev ? '3001' : process.env.PORT
+let port = process.env.PORT
 
 if (isDev) {
   server.use(cors())
@@ -42,9 +42,9 @@ if (!isDev) {
   })
 }
 
-server.listen(port || 3000, () => {
+server.listen(port, () => {
   console.log(
-    `API running on port ${port || 3000}, access it with http://localhost:${port || 3000}/api/users \n
-    React App running on port ${port || 3000}, access it with http://localhost:${port || 3000}/`
+    `API running on port ${port}, access it with http://localhost:${port}/api/users \n
+    React App running on port ${port}, access it with http://localhost:${port}/`
   )
 })
