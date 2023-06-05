@@ -23,12 +23,24 @@ import { consultCep } from '@/services/consultCep'
 
 import { FeatureProps } from '@/interfaces/feature'
 import { UserProps } from '@/interfaces/users'
-import { Box, Grid, Paper, Typography } from '@mui/material'
+import { Box, FormHelperText, Grid, Paper, Typography } from '@mui/material'
 
 const CardSchema = yup
   .object()
   .shape({
     name: yup.string().required('Nome é obrigatório'),
+    document: yup.string().required('CPF é obrigatório'),
+    email: yup.string().email('E-mail inválido').required('E-mail é obrigatório'),
+    BirthDate: yup.string().required('Data de nascimento é obrigatório'),
+    address: yup.object().shape({
+      street: yup.string().required('Rua é obrigatório'),
+      streetNumber: yup.string().required('Número é obrigatório'),
+      neighborhood: yup.string().required('Bairro é obrigatório'),
+      city: yup.string().required('Cidade é obrigatório'),
+      state: yup.string().required('Estado é obrigatório'),
+      postalCode: yup.string().required('CEP é obrigatório'),
+    }),
+    enabledFeatures: yup.array().min(1, 'Selecione pelo menos uma funcionalidade'),
   })
   .required()
 
@@ -44,7 +56,14 @@ const CreateUser = () => {
     resolver: yupResolver(CardSchema),
   })
 
-  const { handleSubmit, setFocus, setValue, watch } = methods
+  const {
+    handleSubmit,
+    setFocus,
+    setValue,
+    watch,
+    formState: { errors },
+    clearErrors,
+  } = methods
 
   const watchFields = watch()
 
@@ -66,9 +85,7 @@ const CreateUser = () => {
 
   const handleLoadCEP = useCallback(
     async (cep: string) => {
-      console.log('🚀 ~ file: create.tsx:50 ~ cep:', cep.replace(/\D/g, ''))
       const data = await consultCep(cep.replace(/\D/g, ''))
-      console.log('🚀 ~ file: create.tsx:51 ~ data:', data)
       if (typeof data !== 'boolean') {
         const address = {
           city: data.localidade,
@@ -83,11 +100,16 @@ const CreateUser = () => {
         setValue('address.state', address.state)
         setValue('address.street', address.street)
         setFocus('address.streetNumber')
+        clearErrors('address.postalCode')
+        clearErrors('address.street')
+        clearErrors('address.neighborhood')
+        clearErrors('address.city')
+        clearErrors('address.state')
       } else {
         toast.error('CEP não encontrado')
       }
     },
-    [setFocus, setValue]
+    [clearErrors, setFocus, setValue]
   )
 
   const handleLoadFeatures = useCallback(async () => {
@@ -268,6 +290,7 @@ const CreateUser = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} md={6}>
                 <Checkbox name="enabledFeatures" options={features} />
+                <FormHelperText error={!!errors.enabledFeatures}>{errors.enabledFeatures?.message}</FormHelperText>
               </Grid>
             </Grid>
             <Typography variant="h6" component="div" sx={{ p: 2 }}>

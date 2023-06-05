@@ -19,10 +19,8 @@ import { normalizeCpf, normalizeCurrency } from '@/utils/normalize'
 
 import api from '@/services/api'
 
-import { FeatureProps } from '@/interfaces/feature'
 import { UserProps } from '@/interfaces/users'
 import {
-  Box,
   IconButton,
   TableBody,
   TableCell,
@@ -62,7 +60,7 @@ const headers = [
 ]
 
 const Users = () => {
-  const { search } = useUtils()
+  const { search, features } = useUtils()
   const navigate = useNavigate()
   const { user } = useAuth()
 
@@ -72,7 +70,6 @@ const Users = () => {
   const [selectedUser, setSelectedUser] = useState<UserProps | null>(null)
   const [openUser, setOpenUser] = useState(false)
   const [openRemove, setOpenRemove] = useState(false)
-  const [features, setFeatures] = useState<FeatureProps[]>([])
 
   const handleOpenUser = useCallback(() => {
     setOpenUser(true)
@@ -87,19 +84,7 @@ const Users = () => {
   }, [])
 
   const handleCloseRemove = useCallback(() => {
-    setOpenUser(false)
-  }, [])
-
-  const handleLoadFeatures = useCallback(async () => {
-    try {
-      setIsLoading(true)
-      const response = await api.get('/features')
-      if (response) setFeatures(response.data.result)
-      setIsLoading(false)
-    } catch (error: any) {
-      toast.error(error.response.data.message || 'Erro ao carregar funcionalidades')
-      setIsLoading(false)
-    }
+    setOpenRemove(false)
   }, [])
 
   const handleLoadUsers = useCallback(async () => {
@@ -114,32 +99,44 @@ const Users = () => {
     }
   }, [])
 
+  const handleRemoveUser = useCallback(async () => {
+    try {
+      await api.delete(`/users/${selectedUser?.id}`)
+      toast.success('Usuário removido com sucesso')
+      const filteredUsers = users.filter((user) => user.id !== selectedUser?.id)
+      setUsers(filteredUsers)
+      handleCloseRemove()
+    } catch (error: any) {
+      toast.error(error.response.data.message || 'Erro ao remover usuário')
+    }
+  }, [handleCloseRemove, selectedUser?.id, users])
+
   const handleTraitResponse = (data: any) => {
     return data.map((d: any) => ({
       ...d,
       email:
         d?.email.length > 30 ? `${d?.email.substring(0, 15)}...${d?.email.substring(d?.email.length - 10)}` : d.email,
       validDocument: d.metadatas.validDocument ? (
-        <Tooltip title="Validado" arrow placement="left">
+        <Tooltip title="Validado" arrow placement="top">
           <IconButton>
             <AiFillCheckCircle color={colors.green[400]} size={25} />
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Não validado" arrow placement="left">
+        <Tooltip title="Não validado" arrow placement="top">
           <IconButton>
             <AiOutlineCloseSquare color={colors.red[400]} size={25} />
           </IconButton>
         </Tooltip>
       ),
       verified: d.metadatas.verified ? (
-        <Tooltip title="Verificado" arrow placement="left">
+        <Tooltip title="Verificado" arrow placement="top">
           <IconButton>
             <MdVerified color={colors.green[400]} size={25} />
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Não verificado" arrow placement="left">
+        <Tooltip title="Não verificado" arrow placement="top">
           <IconButton>
             <IoMdCloseCircle color={colors.red[400]} size={25} />
           </IconButton>
@@ -162,10 +159,6 @@ const Users = () => {
   useEffect(() => {
     handleLoadUsers()
   }, [handleLoadUsers])
-
-  useEffect(() => {
-    handleLoadFeatures()
-  }, [handleLoadFeatures])
 
   useEffect(() => {
     if (search) handleSearch(search)
@@ -295,7 +288,7 @@ const Users = () => {
             <Button onClick={handleCloseRemove} variant="contained" color="warning">
               Cancelar
             </Button>
-            <Button onClick={handleCloseRemove} variant="contained" color="error">
+            <Button onClick={handleRemoveUser} variant="contained" color="error">
               Confirmar
             </Button>
           </>
@@ -310,8 +303,8 @@ const Users = () => {
         traitResponse={handleTraitResponse}
         actions={(data: UserProps) => {
           return (
-            <Box display="flex">
-              <Tooltip title="Visualizar" arrow placement="left">
+            <>
+              <Tooltip title="Visualizar" arrow placement="top">
                 <IconButton
                   onClick={() => {
                     handleOpenUser()
@@ -321,12 +314,12 @@ const Users = () => {
                   <FaEye color={theme.palette.custom.stone} size={25} />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Editar" arrow placement="left">
+              <Tooltip title="Editar" arrow placement="top">
                 <IconButton onClick={() => navigate(`/users/edit/${data.id}`)}>
                   <FaEdit color={theme.palette.custom.stone} size={25} />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Remover" arrow placement="left">
+              <Tooltip title="Remover" arrow placement="top">
                 <IconButton
                   onClick={() => {
                     handleOpenRemove()
@@ -336,7 +329,7 @@ const Users = () => {
                   <FaTrash color={colors.red[600]} size={25} />
                 </IconButton>
               </Tooltip>
-            </Box>
+            </>
           )
         }}
       />

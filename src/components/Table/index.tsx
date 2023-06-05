@@ -105,7 +105,7 @@ const TableHead: React.FC<TableHeadProps> = ({ order, orderBy, onRequestSort, he
             </TableSortLabel>
           </TableCell>
         ))}
-        {action && <TableCell align="left">Ações</TableCell>}
+        {action && <TableCell align="center">Ações</TableCell>}
       </TableRow>
     </TableHeadMui>
   )
@@ -238,7 +238,6 @@ const Table = ({ headers, data, traitResponse, title, actions, isLoading, add }:
               <TableBody>
                 <TableRow>
                   <TableCell colSpan={headers.length + 1} align="center">
-                    {/* <CircularProgress size={80} sx={{ color: theme.palette.custom.stone }} /> */}
                     <Box sx={{ position: 'relative', display: 'inline-flex' }}>
                       <CircularProgress size={80} sx={{ color: theme.palette.custom.stone }} />
                       <Box
@@ -280,7 +279,17 @@ const Table = ({ headers, data, traitResponse, title, actions, isLoading, add }:
                           </TableCell>
                         )
                       })}
-                      {actions && <TableCell align="left">{actions(row)}</TableCell>}
+                      {actions && (
+                        <TableCell
+                          sx={{
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                          }}
+                          align="center"
+                        >
+                          {actions(row)}
+                        </TableCell>
+                      )}
                     </TableRow>
                   )
                 })}

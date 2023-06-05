@@ -10,14 +10,16 @@ import { FeatureProps } from '@/interfaces/feature'
 export interface UtilsContextData {
   search: string
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void
-  features: string[]
+  userFeatures: string[]
+  features: FeatureProps[]
 }
 
 export const UtilsContext = createContext<UtilsContextData>({} as UtilsContextData)
 
 export const UtilsProvider: React.FC<IContextProvider> = ({ children }) => {
   const [search, setSearch] = useState<string>('')
-  const [features, setFeatures] = useState<string[]>([])
+  const [features, setFeatures] = useState<FeatureProps[]>([])
+  const [userFeatures, setUserFeatures] = useState<string[]>([])
   const { user } = useAuth()
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,12 +31,13 @@ export const UtilsProvider: React.FC<IContextProvider> = ({ children }) => {
       const response = await api.get('/features')
       if (response) {
         const features = response.data.result
+        setFeatures(features)
         const userFeatures = features
           .filter((feature: FeatureProps) => {
             return user?.user?.enabledFeatures.includes(feature.id)
           })
           .map((feature: FeatureProps) => feature.name)
-        setFeatures(userFeatures)
+        setUserFeatures(userFeatures)
       }
     } catch (error: any) {
       toast.error('Erro ao carregar as funcionalidades' || error.message)
@@ -49,9 +52,10 @@ export const UtilsProvider: React.FC<IContextProvider> = ({ children }) => {
     return {
       search,
       handleSearch,
+      userFeatures,
       features,
     }
-  }, [features, search])
+  }, [search, userFeatures, features])
 
   return <UtilsContext.Provider value={context}>{children}</UtilsContext.Provider>
 }

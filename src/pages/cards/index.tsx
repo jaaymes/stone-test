@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { FaEdit, FaExchangeAlt, FaEye } from 'react-icons/fa'
+import { FaEdit, FaExchangeAlt, FaEye, FaTrash } from 'react-icons/fa'
 import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 
@@ -27,6 +27,7 @@ import {
   TableRow,
   Tooltip,
   Typography,
+  colors,
 } from '@mui/material'
 
 const headers = [
@@ -57,7 +58,7 @@ const headers = [
 ]
 
 const Cards = () => {
-  const { search, features } = useUtils()
+  const { search, userFeatures } = useUtils()
   const { user } = useAuth()
   const navigate = useNavigate()
 
@@ -67,6 +68,15 @@ const Cards = () => {
   const [open, setOpen] = useState(false)
   const [openCard, setOpenCard] = useState(false)
   const [selectedCard, setSelectedCard] = useState<CardProps>({} as CardProps)
+  const [openRemove, setOpenRemove] = useState(false)
+
+  const handleOpenRemove = useCallback(() => {
+    setOpenRemove(true)
+  }, [])
+
+  const handleCloseRemove = useCallback(() => {
+    setOpenRemove(false)
+  }, [])
 
   const handleOpen = useCallback(() => {
     setOpen(true)
@@ -150,12 +160,14 @@ const Cards = () => {
       }
       const before = selectedCard
       try {
-        setIsLoading(true)
-        const response = await api.put(`/cards/${id}`, {
+        const formData = {
           ...selectedCard,
           status: status,
           updatedAt: new Date(),
-        })
+        }
+        console.log('🚀 ~ file: index.tsx:164 ~ formData:', formData)
+        setIsLoading(true)
+        const response = await api.put(`/cards/${id}`, formData)
         if (response) {
           try {
             const after = response.data
@@ -169,7 +181,14 @@ const Cards = () => {
           } catch (error: any) {
             toast.error(error.response.data.message || 'Erro ao registrar log')
           }
-          await handleLoadCards()
+          const filteredCards = cards.map((card) => {
+            if (card.id === id) {
+              return formData
+            }
+            return card
+          })
+          setCards(filteredCards)
+          toast.success('Status alterado com sucesso')
         }
 
         handleClose()
@@ -179,8 +198,21 @@ const Cards = () => {
         setIsLoading(false)
       }
     },
-    [handleClose, handleLoadCards, selectedCard, user?.id]
+    [cards, handleClose, selectedCard, user?.id]
   )
+
+  const handleRemoveCard = useCallback(async () => {
+    try {
+      api.delete(`/cards/${selectedCard.id}`)
+      const filteredCards = cards.filter((card) => card.id !== selectedCard.id)
+      setCards(filteredCards)
+      toast.success('Cartão removido com sucesso')
+
+      handleCloseRemove()
+    } catch (error: any) {
+      toast.error(error.response.data.message || 'Erro ao remover cartão')
+    }
+  }, [cards, handleCloseRemove, selectedCard.id])
 
   useEffect(() => {
     handleLoadCards()
@@ -309,8 +341,27 @@ const Cards = () => {
           </>
         }
       />
+
+      <Modal
+        maxWidth="xs"
+        title="Remover Cartão"
+        description="Deseja realmente remover esse Cartão?"
+        open={openRemove}
+        onClose={handleCloseRemove}
+        justifyContent="flex-end"
+        buttons={
+          <>
+            <Button onClick={handleCloseRemove} variant="contained" color="warning">
+              Cancelar
+            </Button>
+            <Button onClick={handleRemoveCard} variant="contained" color="error">
+              Confirmar
+            </Button>
+          </>
+        }
+      />
       <Table
-        add={features.includes('card') ? '/cards/create' : undefined}
+        add={userFeatures.includes('card') ? '/cards/create' : undefined}
         isLoading={isLoading}
         title="Cartões"
         headers={headers}
@@ -319,7 +370,7 @@ const Cards = () => {
         actions={(data: CardProps) => {
           return (
             <>
-              <Tooltip title="Visualizar" arrow placement="left">
+              <Tooltip title="Visualizar" arrow placement="top">
                 <IconButton
                   onClick={() => {
                     handleOpenCard()
@@ -329,20 +380,33 @@ const Cards = () => {
                   <FaEye color={theme.palette.custom.stone} size={25} />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Editar" arrow placement="left">
+              <Tooltip title="Editar" arrow placement="top">
                 <IconButton onClick={() => navigate(`/cards/edit/${data.id}`)}>
                   <FaEdit color={theme.palette.custom.stone} size={25} />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Alterar Status" arrow placement="left">
+              <Tooltip title="Alterar Status" arrow placement="top">
                 <IconButton
                   onClick={() => {
                     delete data?.statusLabel
+                    delete data?.name
+                    delete data?.digits
+                    delete data?.limit
                     handleOpen()
                     setSelectedCard(data)
                   }}
                 >
                   <FaExchangeAlt color={theme.palette.custom.stone} size={25} />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Remover" arrow placement="top">
+                <IconButton
+                  onClick={() => {
+                    handleOpenRemove()
+                    setSelectedCard(data)
+                  }}
+                >
+                  <FaTrash color={colors.red[600]} size={25} />
                 </IconButton>
               </Tooltip>
             </>

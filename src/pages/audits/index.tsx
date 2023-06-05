@@ -498,7 +498,7 @@ const Audits = () => {
         actions={(data: AuditProps) => {
           return (
             <>
-              <Tooltip title="Visualizar" arrow placement="left">
+              <Tooltip title="Visualizar" arrow placement="top">
                 <IconButton
                   onClick={() => {
                     handleOpen()
