@@ -6,4 +6,4 @@ nvm use 16
 
 yarn
 
-yarn dev or  yarn build && yarn build:server && yarn start
+yarn dev or yarn build && yarn build:server && yarn start
