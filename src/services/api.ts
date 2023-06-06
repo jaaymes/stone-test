@@ -1,12 +1,10 @@
 import axios from 'axios'
 
 const isDev = process.env.NODE_ENV !== 'production'
-const PORT = process.env.PORT
-
-// console.log('TESTES PORTA ==>', `http://localhost:${isDev ? 3001 : PORT}/api`)
+const PORT = '3001'
 
 const api = axios.create({
-  baseURL: `http://localhost:${isDev ? 3001 : PORT}/api`,
+  baseURL: `http://localhost:${isDev ? PORT : 3000}/api`,
 })
 
 export default api

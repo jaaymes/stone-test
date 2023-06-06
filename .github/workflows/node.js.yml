@@ -17,7 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: akhileshns/heroku-deploy@v3.12.12
-        # with:
           heroku_api_key: "8263f5f8-2f99-4d70-b67b-7c2294f92c48"
           heroku_app_name: "stone"
           heroku_email: "jaaymes@gmail.com"
