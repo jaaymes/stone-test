@@ -3,7 +3,8 @@ import { BrowserRouter } from 'react-router-dom'
 import SideNavbar from '@/components/Sidebar'
 import navbarList from '@/components/Sidebar/navlist'
 
-import { Matcher, render, screen } from '@testing-library/react'
+import { ThemeProvider, createTheme } from '@mui/material'
+import { render, screen } from '@testing-library/react'
 
 // Criar um mock do hook 'useNavigate'
 jest.mock('react-router-dom', () => ({
@@ -11,12 +12,34 @@ jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),
 }))
 
-// This code renders the SideNavbar component with the browser router
-// then checks if each item in the navbar list is rendered
-// also checks if the logo is rendered
+const theme = createTheme({
+  palette: {
+    custom: {
+      stone: '#000',
+    },
+  },
+})
 
 describe('SideNavbar', () => {
   let navigate: jest.Mock<any, any, any>
+  const user = {
+    roles: ['n1'],
+  }
+
+  const filteredRoutes = navbarList.filter((route) => {
+    if (route.permission) {
+      return user?.roles.includes(route.permission)
+    }
+    return true
+  })
+
+  const Wrapper = ({ children }: { children: React.ReactNode }) => {
+    return (
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      </BrowserRouter>
+    )
+  }
 
   beforeEach(() => {
     navigate = jest.fn()
@@ -29,23 +52,23 @@ describe('SideNavbar', () => {
 
   it('render SideNavbar', () => {
     render(
-      <BrowserRouter>
+      <Wrapper>
         <SideNavbar isOpen={true} />
-      </BrowserRouter>
+      </Wrapper>
     )
 
-    navbarList.forEach((item: { desc: Matcher }) => {
+    filteredRoutes.forEach((item) => {
       const itemDesc = screen.getByText(item.desc)
       expect(itemDesc).toBeInTheDocument()
     })
   })
 
-  navbarList.forEach((item) => {
+  filteredRoutes.forEach((item) => {
     it(`render SideNavbar item ${item.desc}`, () => {
       render(
-        <BrowserRouter>
+        <Wrapper>
           <SideNavbar isOpen={true} />
-        </BrowserRouter>
+        </Wrapper>
       )
 
       const itemDesc = screen.getByText(item.desc)
@@ -55,9 +78,9 @@ describe('SideNavbar', () => {
 
   it('render SideNavbar logo', () => {
     render(
-      <BrowserRouter>
+      <Wrapper>
         <SideNavbar isOpen={true} />
-      </BrowserRouter>
+      </Wrapper>
     )
 
     const logo = screen.getByTestId('logo')

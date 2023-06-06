@@ -2,7 +2,16 @@ import { FormProvider, useForm } from 'react-hook-form'
 
 import Input from '@/components/Input'
 
+import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { fireEvent, render, screen } from '@testing-library/react'
+
+const theme = createTheme({
+  palette: {
+    custom: {
+      stone: '#000',
+    },
+  },
+})
 
 describe('Componente Input', () => {
   // O componente de entrada é um componente controlado que usa o hook useForm
@@ -10,7 +19,11 @@ describe('Componente Input', () => {
   const Wrapper = ({ children }: { children: React.ReactNode }) => {
     const methods = useForm()
 
-    return <FormProvider {...methods}>{children}</FormProvider>
+    return (
+      <FormProvider {...methods}>
+        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      </FormProvider>
+    )
   }
 
   it('should render correctly', () => {
