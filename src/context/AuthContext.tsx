@@ -19,7 +19,7 @@ interface UserPropsData {
   password: string
   roles: string[]
   user_id: number
-  user: UserProps | null
+  user?: UserProps | null
 }
 
 export const AuthContext = createContext<AuthContextData>({} as AuthContextData)

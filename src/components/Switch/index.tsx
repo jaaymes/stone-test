@@ -16,7 +16,17 @@ const Switch: React.FC<ISwitchProps> = ({ name, label }) => {
         name={name}
         control={control}
         render={({ field: { ref, ...field } }) => (
-          <FormControlLabel control={<SwitchMui ref={ref} {...field} checked={field.value || false} />} label={label} />
+          <FormControlLabel
+            control={
+              <SwitchMui
+                inputProps={{ 'aria-label': 'controlled' }}
+                ref={ref}
+                {...field}
+                checked={field.value || false}
+              />
+            }
+            label={label}
+          />
         )}
       />
     </>

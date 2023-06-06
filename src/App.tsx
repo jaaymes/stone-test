@@ -8,6 +8,7 @@ import Layout from '@/pages/layout'
 import Login from '@/pages/login'
 import Users from '@/pages/users'
 
+import 'react-lazy-load-image-component/src/effects/blur.css'
 import CreateCards from './pages/cards/create'
 import CreateUser from './pages/users/create'
 import PrivateRoute from './routes/privateRoute'

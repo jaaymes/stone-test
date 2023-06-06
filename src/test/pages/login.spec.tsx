@@ -2,7 +2,10 @@ import { BrowserRouter } from 'react-router-dom'
 
 import Login from '@/pages/login'
 
+import theme from '@/styles/theme'
+
 import { AuthContext, AuthContextData } from '@/context/AuthContext'
+import { ThemeProvider } from '@emotion/react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 
 const mockAuth: AuthContextData = {
@@ -24,13 +27,21 @@ jest.mock('react-router-dom', () => ({
 }))
 
 describe('Login Page', () => {
+  const Wrapper = ({ children }: { children: React.ReactNode }) => {
+    return (
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <AuthContext.Provider value={mockAuth}>{children}</AuthContext.Provider>
+        </ThemeProvider>
+      </BrowserRouter>
+    )
+  }
+
   it('deve navegar para a página inicial após se o auth for true', async () => {
     const { getByLabelText, getByRole, rerender } = render(
-      <BrowserRouter>
-        <AuthContext.Provider value={mockAuth}>
-          <Login />
-        </AuthContext.Provider>
-      </BrowserRouter>
+      <Wrapper>
+        <Login />
+      </Wrapper>
     )
 
     const emailInput = getByLabelText('Email')
@@ -46,11 +57,9 @@ describe('Login Page', () => {
     })
 
     rerender(
-      <BrowserRouter>
-        <AuthContext.Provider value={mockAuth}>
-          <Login />
-        </AuthContext.Provider>
-      </BrowserRouter>
+      <Wrapper>
+        <Login />
+      </Wrapper>
     )
 
     await waitFor(() => {
@@ -60,11 +69,9 @@ describe('Login Page', () => {
 
   it('deve chamar a função signIn com os valores de entrada corretos', async () => {
     const { getByLabelText, getByRole } = render(
-      <BrowserRouter>
-        <AuthContext.Provider value={mockAuth}>
-          <Login />
-        </AuthContext.Provider>
-      </BrowserRouter>
+      <Wrapper>
+        <Login />
+      </Wrapper>
     )
 
     const emailInput = getByLabelText('Email')
@@ -82,23 +89,19 @@ describe('Login Page', () => {
 
   it('renderiza corretamente', () => {
     const { getByText } = render(
-      <BrowserRouter>
-        <AuthContext.Provider value={mockAuth}>
-          <Login />
-        </AuthContext.Provider>
-      </BrowserRouter>
+      <Wrapper>
+        <Login />
+      </Wrapper>
     )
 
-    expect(getByText('Gestor Administrativo')).toBeInTheDocument()
+    expect(getByText('Gestor de Cartões Stone')).toBeInTheDocument()
   })
 
   it('deve chamar a função signIn com valores de entrada incorretos', async () => {
     const { getByLabelText, getByRole } = render(
-      <BrowserRouter>
-        <AuthContext.Provider value={mockAuth}>
-          <Login />
-        </AuthContext.Provider>
-      </BrowserRouter>
+      <Wrapper>
+        <Login />
+      </Wrapper>
     )
 
     const emailInput = getByLabelText('Email')

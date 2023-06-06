@@ -24,6 +24,7 @@ const Select: React.FC<InputProps> = ({ name, label, options, ...rest }) => {
         <TextField
           {...field}
           {...rest}
+          inputProps={{ id: 'select', 'data-testid': 'select' }}
           sx={{
             '& .MuiOutlinedInput-root': {
               '&:hover .MuiOutlinedInput-notchedOutline': {

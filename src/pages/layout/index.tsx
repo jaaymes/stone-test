@@ -31,6 +31,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           }}
         >
           <Button
+            id="menu-button"
             onClick={toogleOpen}
             sx={{
               minWidth: 'initial',
