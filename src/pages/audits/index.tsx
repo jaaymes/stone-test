@@ -76,7 +76,6 @@ const Audits = () => {
               return { ...audit, user }
             })
           )
-          console.log('🚀 ~ file: index.tsx:75 ~ handleLoadAudits ~ _response:', _response)
           setAudits(_response)
         } catch (error: any) {
           toast.error(error.response.data.message || 'Erro ao carregar usuário')
@@ -156,10 +155,6 @@ const Audits = () => {
   useEffect(() => {
     if (search) handleSearch(search)
   }, [handleSearch, search])
-
-  useEffect(() => {
-    console.log('selectedCard', selectedCard)
-  }, [selectedCard])
 
   useEffect(() => {
     if (!user?.roles.includes('n2')) {

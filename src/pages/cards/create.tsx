@@ -41,15 +41,12 @@ const CreateCards = () => {
     resolver: yupResolver(CardSchema),
   })
 
-  const { handleSubmit, watch } = methods
-
-  const wacthFields = watch()
+  const { handleSubmit } = methods
 
   const handleLoadCard = useCallback(async () => {
     try {
       const response = await api.get(`/cards/${id}`)
       if (response.status === 200) {
-        console.log('🚀 ~ file: create.tsx:49 ~ handleLoadCard ~ response:', response)
         setCard(response.data)
         handleLoadData(response.data, methods.setValue)
       }
@@ -68,7 +65,6 @@ const CreateCards = () => {
         }))
         setUsers(_data)
       }
-      console.log('🚀 ~ file: create.tsx:36 ~ handleLoadUsers ~ response.data:', response.data)
     } catch (error: any) {
       toast.error('Erro ao carregar usuários' || error.message)
     }
@@ -131,10 +127,6 @@ const CreateCards = () => {
     if (id) handleLoadCard()
   }, [handleLoadCard, id])
 
-  useEffect(() => {
-    console.log('wacthFields', wacthFields)
-  }, [wacthFields])
-
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
@@ -164,7 +156,7 @@ const CreateCards = () => {
                 <Input name="metadatas.digits" label="Digitos" disabled={id ? true : false} fullWidth />
               </Grid>
               <Grid item xs={12} md={6}>
-                <Select options={users} name="user_id" label="Usuário" fullWidth />
+                <Select options={users} name="user_id" label="Usuário" fullWidth data-testid="select-user" />
               </Grid>
             </Grid>
 

@@ -24,7 +24,7 @@ const Select: React.FC<InputProps> = ({ name, label, options, ...rest }) => {
         <TextField
           {...field}
           {...rest}
-          inputProps={{ id: 'select', 'data-testid': 'select' }}
+          inputProps={{ 'data-testid': 'select' }}
           sx={{
             '& .MuiOutlinedInput-root': {
               '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -51,7 +51,7 @@ const Select: React.FC<InputProps> = ({ name, label, options, ...rest }) => {
           ref={ref}
         >
           {options.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
+            <MenuItem key={option.value} value={option.value} aria-label={option.label}>
               {option.label}
             </MenuItem>
           ))}

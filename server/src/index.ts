@@ -20,9 +20,7 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env') })
 
 const server = express()
 const isDev = process.env.NODE_ENV !== 'production'
-let port = process.env.PORT_API
-
-console.log('port', process.env.PORT)
+let port = process.env.PORT
 
 if (isDev) {
   server.use(cors())
