@@ -6,12 +6,8 @@
     "node": "16.x"
   },
   "scripts": {
-    "dev": "concurrently --kill-others \"yarn run dev:server\" \"yarn run dev:client\"",
-    "build": "yarn run build:server && yarn run build:client",
-    "build:client": "tsc && vite build",
-    "build:server": "tsc --project tsconfig.server.json",
-    "dev:client": "vite",
-    "dev:server": "yarn run build:server && node ./server/build/index.js",
+    "build": "vite build",
+    "dev": "vite",
     "lint:ts": "eslint --ext \".js,.ts,tsx\" --ignore-path .gitignore .",
     "lint:prettier": "prettier --check .",
     "lint": "yarn lint:ts",

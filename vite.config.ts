@@ -9,15 +9,8 @@ export default ({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) }
   return defineConfig({
     plugins: [react(), reactRefresh()],
-    server: {
-      port: isDev ? undefined : Number(process.env.VITE_PORT),
-    },
     build: {
       outDir: 'build',
-    },
-    define: {
-      'process.env.NODE_ENV': JSON.stringify('production'),
-      'process.env.VITE_PORT': JSON.stringify(process.env.VITE_PORT),
     },
     resolve: {
       alias: {
