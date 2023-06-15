@@ -13,6 +13,7 @@
     "lint": "yarn lint:ts",
     "lintfix": "prettier --write --list-different . && yarn lint --fix",
     "format": "prettier --write src/",
+    "start": "view preview",
     "prepare": "husky install",
     "preview": "vite preview",
     "test": "jest",
