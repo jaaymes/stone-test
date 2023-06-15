@@ -15,8 +15,6 @@
     "format": "prettier --write src/",
     "prepare": "husky install",
     "preview": "vite preview",
-    "start": "pm2-runtime start pm2.json --env production",
-    "start:kill": "pm2 kill",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
